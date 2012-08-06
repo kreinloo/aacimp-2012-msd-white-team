@@ -9,5 +9,5 @@ Brick.prototype.constructor = Brick;
 
 function Brick () {
   GameObject.call(this);
-  this.type = null;
+  this.type = TYPE.BRICK;
 }

@@ -4,7 +4,7 @@
 
 */
 
-describe("Bullet test suite", function () {
+describe("Bullet", function () {
 
   var bullet;
 
@@ -16,6 +16,11 @@ describe("Bullet test suite", function () {
   it("should have a tank id", function () {
     bullet = new Bullet();
     expect(bullet.tankId).toBeDefined();
+  });
+
+  it("should have the right type identifier", function () {
+    bullet = new Bullet();
+    expect(bullet.type).toEqual(TYPE.BULLET);
   });
 
 });

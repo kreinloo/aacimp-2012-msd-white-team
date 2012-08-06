@@ -10,8 +10,10 @@ Tank.prototype.constructor = Tank;
 function Tank () {
   GameObject.call(this);
   this.direction = DIRECTION.NORTH;
+  this.type = TYPE.TANK;
 }
 
-Tank.prototype.toString = function () {
-  console.log("TANK AT X: " + this.x + " Y: " + this.y);
+Tank.prototype.moveTo = function (x, y) {
+  this.x = x;
+  this.y = y;
 };
