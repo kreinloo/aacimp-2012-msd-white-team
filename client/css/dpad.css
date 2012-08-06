@@ -9,7 +9,7 @@
 #arrowDown{
     height: 20px;
     width: 20px;
-    background-color: yellow;
+    background-color: orange;
     position:absolute;
     top: 79%;
     right: 5%;
@@ -32,9 +32,9 @@
 }
 #buttonShoot{
     height: 30px;
-    width: 60;
+    width: 60px;
     background-color: blue;
     position: absolute;
     top: 63%;
-    right: 4%;
+    right: 3%;
 }
