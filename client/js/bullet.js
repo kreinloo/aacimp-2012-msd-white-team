@@ -11,4 +11,5 @@ function Bullet () {
   GameObject.call(this);
   this.direction = DIRECTION.NORTH;
   this.tankId = null;
+  this.type = TYPE.BULLET;
 }

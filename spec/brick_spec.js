@@ -4,13 +4,13 @@
 
 */
 
-describe("Brick test suite", function () {
+describe("Brick", function () {
 
   var brick;
 
-  it("should have a type", function () {
+  it("should have the right type identifier", function () {
     brick = new Brick();
-    expect(brick.type).toBeDefined();
+    expect(brick.type).toEqual(TYPE.BRICK);
   });
 
 });

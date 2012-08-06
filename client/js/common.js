@@ -29,3 +29,9 @@ var EVENT = {
   SHOT          : 0x000402,
   SCORE         : 0x000403
 };
+
+var TYPE = {
+  TANK          : 0x000501,
+  BULLET        : 0x000502,
+  BRICK         : 0x000503
+};
