@@ -4,16 +4,14 @@
 
 */
 
-var b1;
+var map;
 
 $(function () {
 
-  var map = new Map();
+  map = new Map();
   var tank = new Tank();
-  b1 = new Bullet();
 
   map.addObject(tank);
-  map.addObject(b1);
 
   setInterval(function () {
     map.updateObjects();
@@ -25,15 +23,24 @@ $(function () {
     switch (e.keyCode) {
       case 38:
         tank.yVel = -1;
+        tank.direction = DIRECTION.NORTH;
         break;
       case 40:
         tank.yVel = +1;
+        tank.direction = DIRECTION.SOUTH;
         break;
       case 37:
         tank.xVel = -1;
+        tank.direction = DIRECTION.WEST;
         break;
       case 39:
         tank.xVel = +1;
+        tank.direction = DIRECTION.EAST;
+        break;
+
+      case 32:
+        console.log("shoot")
+        tank.shoot();
         break;
     }
 

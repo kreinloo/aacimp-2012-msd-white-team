@@ -28,3 +28,10 @@
 	-webkit-transition-duration: 100ms;
 	-webkit-transition-timing-function: linear;
 }
+
+.brick {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	background-color: black;
+}
