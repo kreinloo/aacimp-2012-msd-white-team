@@ -6,6 +6,7 @@
 
 function Bullet () {
   GameObject.call(this);
+  this.domElement.addClass("bullet")
 }
 
 Bullet.prototype = new GameObject({

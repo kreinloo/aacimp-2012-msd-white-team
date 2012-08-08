@@ -1,13 +1,30 @@
 #map {
 	position: absolute;
-	width: 400;
-	height: 240;
+	width: 600;
+	height: 360;
 	border: 1px solid red;
 }
 
-.testTank {
+.tank {
 	position: absolute;
-	width: 20px;
-	height: 20px;
+	width: 30px;
+	height: 30px;
 	background-color: blue;
+
+	-webkit-transition: all 100ms;
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 100ms;
+	-webkit-transition-timing-function: linear;
+}
+
+.bullet {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	background-color: red;
+
+	-webkit-transition: all 100ms;
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 100ms;
+	-webkit-transition-timing-function: linear;
 }

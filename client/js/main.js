@@ -4,17 +4,21 @@
 
 */
 
+var b1;
+
 $(function () {
 
   var map = new Map();
   var tank = new Tank();
+  b1 = new Bullet();
 
   map.addObject(tank);
+  map.addObject(b1);
 
   setInterval(function () {
     map.updateObjects();
     map.renderScene();
-  }, 50);
+  }, 100);
 
   $(document).keydown(function (e) {
 

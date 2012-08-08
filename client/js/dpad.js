@@ -1,5 +1,6 @@
+/*
 $(function(){
-    
+
   $("#arrowUp").tap(function(){
       alert("UP");
   });
@@ -21,3 +22,4 @@ $(function(){
   });
 
 });
+*/

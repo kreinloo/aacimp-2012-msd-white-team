@@ -7,6 +7,8 @@
 function GameObject (options) {
   this.uid = GameObject.AUTO_INCREMENT++;
   $.extend(this, options);
+  this.domElement = $("<div />");
+  $("#map").append(this.domElement);
 };
 
 GameObject.prototype = {
@@ -36,10 +38,10 @@ GameObject.prototype = {
   render: function () {
     if (this.needsRendering) {
       this.domElement.css({
-        left: this.x * 2,
-        top: this.y * 2
+        left: this.x * 10,
+        top: this.y * 10
       });
-      
+
       this.needsRendering = false;
     }
   }

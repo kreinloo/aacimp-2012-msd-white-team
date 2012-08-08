@@ -9,16 +9,15 @@ Tank.prototype.constructor = Tank;
 
 function Tank () {
   GameObject.call(this);
-  this.domElement = $("<div />").addClass("testTank");
-  $("#map").append(this.domElement);
+  this.domElement.addClass("tank");
 }
 
 Tank.prototype = new GameObject({
   type: TYPE.TANK,
   direction: DIRECTION.NORTH,
 
-  sizeX: 20,
-  sizeY: 20,
+  sizeX: 30,
+  sizeY: 30,
 
   moveTo: function (x, y) {
     this.x = x;
