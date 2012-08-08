@@ -17,7 +17,7 @@ $(function () {
   }, 50);
 
   $(document).keydown(function (e) {
-    
+
     switch (e.keyCode) {
       case 38:
         tank.yVel = -1;
@@ -32,6 +32,8 @@ $(function () {
         tank.xVel = +1;
         break;
     }
+
+    return false;
 
   });
 
@@ -51,6 +53,8 @@ $(function () {
         tank.xVel = 0;
         break;
     }
+
+    return false;
 
   });
 
