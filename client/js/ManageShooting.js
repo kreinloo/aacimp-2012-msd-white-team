@@ -15,7 +15,7 @@ function shooting(tank){
     // todo rate , we should consider how many times per second the tanks can shoot
     var tank = document.getElementsByClassName('testTank')[0];
     //var tank = document.getElementById(tank);
-    if ("tank"){
+    if (tank) {
         var direction = tank.prototype.direction;
         switch (direction){
             case DIRECTION.NORTH :
@@ -42,7 +42,7 @@ function shooting(tank){
 function updateBullet(count){
     if (count != distance){
         
-    }else{
+    } else {
         //todo call verify explosion
     }
 

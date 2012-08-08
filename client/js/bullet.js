@@ -1,15 +1,15 @@
 /*
 
-  bullet.js
+  brick.js
 
 */
 
-Bullet.prototype = new GameObject();
-Bullet.prototype.constructor = Bullet;
-
-function Bullet () {
+function Brick () {
   GameObject.call(this);
-  this.direction = DIRECTION.NORTH;
-  this.tankId = null;
-  this.type = TYPE.BULLET;
 }
+
+Brick.prototype = new GameObject({
+  type: TYPE.BULLET,
+  tankId: null,
+  direction: DIRECTION.NORTH
+});

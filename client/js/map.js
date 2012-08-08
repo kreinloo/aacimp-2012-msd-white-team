@@ -1,36 +1,38 @@
 function Map () {
 
-  var objects = {};
-  var domMap = $("#map");
-  var map = [];
+  this.objects = {};
+  this.domMap = $("#map");
+  this.map = [];
 
-  this.initialize = function () {
-    var i, j;
-    for (i = 0; i < 120; i++) {
-      for (j = 0; j < 200; j++) {
+  // TODO: anything here?
+}
 
+Map.prototype = {
+  initialize = function () {
+    for (var i = 0; i < 120; i++) {
+      for (var j = 0; j < 200; j++) {
+        // TODO: add initializing
       }
     }
-  }
+  },
 
-  this.updateObjects = function () {
-    for (var obj in objects) {
-      objects[obj].update();
+  updateObjects = function () {
+    for (var objKey in objects) {
+      this.objects[objKey].update();
     }
-  }
+  },
 
-  this.renderScene = function () {
+  renderScene = function () {
     for (var obj in objects) {
-      objects[obj].render();
+      this.objects[obj].render();
     }
-  }
+  },
 
-  this.addObject = function (obj) {
-    objects[obj.uid] = obj;
-  }
+  addObject = function (obj) {
+    this.objects[obj.uid] = obj;
+  },
 
-  this.removeObject = function (obj) {
-    delete objects[obj.uid];
+  removeObject = function (obj) {
+    delete this.objects[obj.uid];
   }
-
 }

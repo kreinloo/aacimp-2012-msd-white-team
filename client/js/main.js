@@ -4,7 +4,7 @@
 
 */
 
-$(document).ready(function () {
+$(function () {
 
   var map = new Map();
   var tank = new Tank();
@@ -17,6 +17,7 @@ $(document).ready(function () {
   }, 50);
 
   $(document).keydown(function (e) {
+    
     switch (e.keyCode) {
       case 38:
         tank.yVel = -1;

@@ -1,19 +1,23 @@
-jQuery(document).bind('pageinit',function(){
+$(function(){
+    
+  $("#arrowUp").tap(function(){
+      alert("UP");
+  });
 
-    $("#arrowUp").tap(function(){
-        alert("UP");
-    });
-    $("#arrowDown").tap(function(){
-        alert("DOWN");
-    });
-    $("#arrowLeft").tap(function(){
-        alert("LEFT");
-    });
-    $("#arrowRight").tap(function(){
-        alert("RIGHT");
-    });
-    $("#buttonShoot").tap(function(){
-        alert("BOOM");
-    });
+  $("#arrowDown").tap(function(){
+      alert("DOWN");
+  });
+
+  $("#arrowLeft").tap(function(){
+      alert("LEFT");
+  });
+
+  $("#arrowRight").tap(function(){
+      alert("RIGHT");
+  });
+
+  $("#buttonShoot").tap(function(){
+      alert("BOOM");
+  });
 
 });

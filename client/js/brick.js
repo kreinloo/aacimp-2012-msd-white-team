@@ -4,10 +4,10 @@
 
 */
 
-Brick.prototype = new GameObject();
-Brick.prototype.constructor = Brick;
-
 function Brick () {
   GameObject.call(this);
-  this.type = TYPE.BRICK;
 }
+
+Brick.prototype = new GameObject({
+  type: TYPE.BRICK
+});

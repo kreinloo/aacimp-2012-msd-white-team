@@ -8,19 +8,20 @@ Tank.prototype = new GameObject ();
 Tank.prototype.constructor = Tank;
 
 function Tank () {
-
   GameObject.call(this);
-  this.direction = DIRECTION.NORTH;
-  this.type = TYPE.TANK;
-  this.sizeX = 20;
-  this.sizeY = 20;
-  this.domElement = $("<div>");
-  this.domElement.addClass("testTank");
-
+  this.domElement = $("<div />").addClass("testTank");
   $("#map").append(this.domElement);
 }
 
-Tank.prototype.moveTo = function (x, y) {
-  this.x = x;
-  this.y = y;
-};
+Tank.prototype = new GameObject({
+  type: TYPE.TANK,
+  direction: DIRECTION.NORTH,
+
+  sizeX: 20,
+  sizeY: 20,
+
+  moveTo: function (x, y) {
+    this.x = x;
+    this.y = y;
+  }
+});
