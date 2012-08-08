@@ -35,8 +35,11 @@ GameObject.prototype = {
 
   render: function () {
     if (this.needsRendering) {
-      this.domElement.css("top", this.y * 2);
-      this.domElement.css("left", this.x * 2);
+      this.domElement.css({
+        left: this.x * 2,
+        top: this.y * 2
+      });
+      
       this.needsRendering = false;
     }
   }
