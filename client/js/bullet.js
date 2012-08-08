@@ -4,11 +4,11 @@
 
 */
 
-function Brick () {
+function Bullet () {
   GameObject.call(this);
 }
 
-Brick.prototype = new GameObject({
+Bullet.prototype = new GameObject({
   type: TYPE.BULLET,
   tankId: null,
   direction: DIRECTION.NORTH
