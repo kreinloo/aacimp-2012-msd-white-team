@@ -19,4 +19,19 @@ describe("GameObject", function () {
     expect(gameObject.y).toBeDefined();
   });
 
+  it("should have velocity and other variables", function () {
+    gameObject = new GameObject();
+    expect(gameObject.xVel).toBeDefined();
+    expect(gameObject.yVel).toBeDefined();
+    expect(gameObject.isMoving).toBeDefined();
+    expect(gameObject.needsRendering).toBeDefined();
+    expect(gameObject.domElement).toBeDefined();
+    expect(gameObject.uid).toBeDefined();
+  });
+
+  it("should generate an uid while being created", function () {
+    gameObject = new GameObject();
+    expect(gameObject.uid).not.toEqual(null);
+  });
+
 });

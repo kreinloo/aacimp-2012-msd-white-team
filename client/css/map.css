@@ -1,10 +1,12 @@
-td {
-	width: 30px;
-	height: 30px;
-	background-color: gray;
+#map {
+	position: absolute;
+	width: 400;
+	height: 240;
+	border: 1px solid red;
 }
 
 .testTank {
+	position: absolute;
 	width: 20px;
 	height: 20px;
 	background-color: blue;

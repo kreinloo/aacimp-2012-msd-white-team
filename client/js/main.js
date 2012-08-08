@@ -6,15 +6,51 @@
 
 $(document).ready(function () {
 
-  var r = new Renderer();
-  r.initialize();
-  var t = new Tank();
+  var map = new Map();
+  var tank = new Tank();
 
-  r.drawObject(t);
+  map.addObject(tank);
 
-  setTimeout(function () {
-    t.moveTo(0,1);
-    r.drawObject(t);
-  }, 1000);
+  setInterval(function () {
+    map.updateObjects();
+    map.renderScene();
+  }, 50);
+
+  $(document).keydown(function (e) {
+    switch (e.keyCode) {
+      case 38:
+        tank.yVel = -1;
+        break;
+      case 40:
+        tank.yVel = +1;
+        break;
+      case 37:
+        tank.xVel = -1;
+        break;
+      case 39:
+        tank.xVel = +1;
+        break;
+    }
+
+  });
+
+  $(document).keyup(function (e) {
+
+    switch (e.keyCode) {
+      case 38:
+        tank.yVel = 0;
+        break;
+      case 40:
+        tank.yVel = 0;
+        break;
+      case 37:
+        tank.xVel = 0;
+        break;
+      case 39:
+        tank.xVel = 0;
+        break;
+    }
+
+  });
 
 });
