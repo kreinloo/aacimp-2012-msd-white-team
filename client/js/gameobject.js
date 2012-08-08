@@ -7,12 +7,13 @@
 function GameObject (options) {
   this.uid = GameObject.AUTO_INCREMENT++;
   $.extend(this, options);
-  this.domElement = $("<div />");
-  this.domElement.css({
+
+  this.domElement = $("<div />").addClass('gameobject').addClass(this.type).css({
     left: this.x * 10,
-    top: this.y * 10
+    top: this.y * 10,
+    width: this.sizeX * 10,
+    height: this.sizeY * 10
   });
-  $("#map").append(this.domElement);
 };
 
 GameObject.prototype = {
@@ -60,14 +61,14 @@ GameObject.prototype = {
   },
 
   render: function () {
-    if (this.needsRendering) {
-      this.domElement.css({
-        left: this.x * 10,
-        top: this.y * 10
-      });
+    if (!this.needsRendering) return;
 
-      this.needsRendering = false;
-    }
+    this.domElement.css({
+      left: this.x * 10,
+      top: this.y * 10
+    });
+
+    this.needsRendering = false;
   },
 
   destroy: function () {

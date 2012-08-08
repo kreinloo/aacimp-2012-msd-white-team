@@ -1,10 +1,7 @@
 function Map () {
-
   this.objects = {};
-  this.domMap = $("#map");
+  this.domElement = $("#map");
   this.map = [];
-
-  // TODO: anything here?
 }
 
 Map.prototype = {
@@ -30,6 +27,7 @@ Map.prototype = {
 
   addObject: function (obj) {
     this.objects[obj.uid] = obj;
+    this.domElement.append(obj.domElement);
   },
 
   removeObject: function (obj) {

@@ -31,7 +31,7 @@ var EVENT = {
 };
 
 var TYPE = {
-  TANK          : 0x000501,
-  BULLET        : 0x000502,
-  BRICK         : 0x000503
+  TANK          : 'tank',
+  BULLET        : 'bullet',
+  BRICK         : 'brick'
 };

@@ -5,33 +5,15 @@
 	border: 1px solid red;
 }
 
-.tank {
+.gameobject {
 	position: absolute;
-	width: 30px;
-	height: 30px;
-	background-color: blue;
 
 	-webkit-transition: all 100ms;
 	-webkit-transition-property: all;
 	-webkit-transition-duration: 100ms;
-	-webkit-transition-timing-function: linear;
+	-webkit-transition-timing-function: linear;	
 }
 
-.bullet {
-	position: absolute;
-	width: 10px;
-	height: 10px;
-	background-color: red;
-
-	-webkit-transition: all 100ms;
-	-webkit-transition-property: all;
-	-webkit-transition-duration: 100ms;
-	-webkit-transition-timing-function: linear;
-}
-
-.brick {
-	position: absolute;
-	width: 30px;
-	height: 30px;
-	background-color: black;
-}
+.tank   { background-color: blue  }
+.bullet { background-color: red   }
+.brick  { background-color: black }

@@ -24,27 +24,28 @@ $(function () {
       case 38:
         tank.yVel = -1;
         tank.direction = DIRECTION.NORTH;
-        break;
+        return false;
+        
       case 40:
         tank.yVel = +1;
         tank.direction = DIRECTION.SOUTH;
-        break;
+        return false;
+        
       case 37:
         tank.xVel = -1;
         tank.direction = DIRECTION.WEST;
-        break;
+        return false;
+        
       case 39:
         tank.xVel = +1;
         tank.direction = DIRECTION.EAST;
-        break;
+        return false;
 
       case 32:
         console.log("shoot")
         tank.shoot();
-        break;
+        return false;
     }
-
-    return false;
 
   });
 
@@ -52,20 +53,15 @@ $(function () {
 
     switch (e.keyCode) {
       case 38:
-        tank.yVel = 0;
-        break;
       case 40:
         tank.yVel = 0;
-        break;
+        return false;
+        
       case 37:
-        tank.xVel = 0;
-        break;
       case 39:
         tank.xVel = 0;
-        break;
+        return false;
     }
-
-    return false;
 
   });
 

@@ -6,11 +6,10 @@
 
 function Bullet (tank) {
 
-  var x, y, xVel, yVel;
-  x = tank.x;
-  y = tank.y;
-  xVel = 0;
-  yVel = 0;
+  var x = tank.x,
+      y = tank.y,
+      xVel = 0,
+      yVel = 0;
 
   switch (tank.direction) {
     case DIRECTION.NORTH:
@@ -44,7 +43,6 @@ function Bullet (tank) {
     xVel: xVel,
     yVel: yVel
   });
-  this.domElement.addClass("bullet");
 }
 
 Bullet.prototype = new GameObject({

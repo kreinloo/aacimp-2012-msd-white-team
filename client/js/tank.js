@@ -4,12 +4,8 @@
 
 */
 
-Tank.prototype = new GameObject ();
-Tank.prototype.constructor = Tank;
-
 function Tank () {
   GameObject.call(this);
-  this.domElement.addClass("tank");
 }
 
 Tank.prototype = new GameObject({
