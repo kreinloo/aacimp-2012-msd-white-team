@@ -15,9 +15,13 @@
 }
 
 .tank   {
-    background-image: url("../gfx/tank-red.png");
+    background-image: url("../gfx/tank-blue.png");
     background-size: 30px;
 }
 .bullet { background-color: red   }
-.brick  { background-color: black }
+.brick  {
+    background-image: url("../gfx/wall.png");
+    background-size: 30px;
+
+}
 
