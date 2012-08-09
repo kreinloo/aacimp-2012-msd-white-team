@@ -9,5 +9,8 @@ function Brick () {
 }
 
 Brick.prototype = new GameObject({
-  type: TYPE.BRICK
+  type: TYPE.BRICK,
+  sizeX: 3,
+  sizeY: 3,
+  needsRendering: true
 });
