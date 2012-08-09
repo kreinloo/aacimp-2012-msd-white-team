@@ -16,7 +16,19 @@ Map.prototype = {
   },
 
   updateObjects: function () {
+    var collision;
     for (var objKey in this.objects) {
+      if (this.objects[objKey].type === TYPE.BULLET) { continue; }
+      collision = this.objects[objKey].update();
+      if (collision) {
+        console.log(collision)
+      }
+    }
+  },
+
+  updateBullets: function () {
+    for (var objKey in this.objects) {
+      if (this.objects[objKey].type !== TYPE.BULLET) { continue; }
       this.objects[objKey].update();
     }
   },
@@ -47,4 +59,4 @@ Map.prototype = {
       console.log(this.map[i]);
     }
   }
-}
+};

@@ -40,7 +40,7 @@ describe("GameObject", function () {
     bullet = new Bullet(tank);
     expect(bullet.direction).toEqual(DIRECTION.NORTH);
 
-    tank.direction = DIRECTION.SOUTH
+    tank.direction = DIRECTION.SOUTH;
     bullet = new Bullet(tank);
     expect(bullet.direction).toEqual(DIRECTION.SOUTH);
 

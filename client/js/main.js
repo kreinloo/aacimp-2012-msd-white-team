@@ -28,6 +28,11 @@ $(function () {
     map.renderScene();
   }, 100);
 
+  setInterval(function () {
+    map.updateBullets();
+    map.renderScene();
+  }, 30);
+
   $(document).keydown(function (e) {
 
     switch (e.keyCode) {
@@ -52,7 +57,6 @@ $(function () {
         return false;
 
       case 32:
-        console.log("shoot")
         tank.shoot();
         return false;
     }
