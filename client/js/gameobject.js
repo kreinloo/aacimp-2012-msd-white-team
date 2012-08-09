@@ -68,6 +68,23 @@ GameObject.prototype = {
       top: this.y * 10
     });
 
+    if(this.type === TYPE.TANK){
+        switch(this.direction){
+            case DIRECTION.NORTH :
+                this.domElement.css("-webkit-transform","rotate(0deg)");
+                break;
+            case DIRECTION.SOUTH :
+                this.domElement.css("-webkit-transform","rotate(180deg)");
+                break;
+            case DIRECTION.WEST :
+                this.domElement.css("-webkit-transform","rotate(270deg)");
+                break;
+            case DIRECTION.EAST :
+                this.domElement.css("-webkit-transform","rotate(90deg)");
+                break;
+        }
+    }
+
     this.needsRendering = false;
   },
 
