@@ -11,17 +11,18 @@
 	-webkit-transition: all 100ms;
 	-webkit-transition-property: all;
 	-webkit-transition-duration: 100ms;
-	-webkit-transition-timing-function: linear;	
+	-webkit-transition-timing-function: linear;
 }
 
 .tank   {
     background-image: url("../gfx/tank-blue.png");
     background-size: 30px;
 }
-.bullet { background-color: red   }
+.bullet {
+	background-color: red;
+	-webkit-transition: all 30ms;
+}
 .brick  {
     background-image: url("../gfx/wall.png");
     background-size: 30px;
-
 }
-

@@ -14,24 +14,24 @@ function Bullet (tank) {
   switch (tank.direction) {
     case DIRECTION.NORTH:
       x += 1;
-      yVel = -3;
+      yVel = -1;
       break;
 
     case DIRECTION.SOUTH:
       y += 2;
       x += 1;
-      yVel = +3;
+      yVel = +1;
       break;
 
     case DIRECTION.EAST:
       y += 1;
       x += 2;
-      xVel = +3;
+      xVel = +1;
       break;
 
     case DIRECTION.WEST:
       y += 1;
-      xVel = -3;
+      xVel = -1;
       break;
   }
 
