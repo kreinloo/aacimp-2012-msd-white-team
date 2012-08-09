@@ -8,10 +8,7 @@
 .gameobject {
 	position: absolute;
 
-	-webkit-transition: all 100ms;
-	-webkit-transition-property: all;
-	-webkit-transition-duration: 100ms;
-	-webkit-transition-timing-function: linear;
+	-webkit-transition: left 100ms linear, top 100ms linear;
 }
 
 .tank   {

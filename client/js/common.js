@@ -35,3 +35,8 @@ var TYPE = {
   BULLET        : 'bullet',
   BRICK         : 'brick'
 };
+
+var MAP = {
+  SIZE_X        : 60,
+  SIZE_Y        : 36
+};

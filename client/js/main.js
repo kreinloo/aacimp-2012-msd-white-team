@@ -10,6 +10,8 @@ $(function () {
 
   map = new Map();
   var tank = new Tank();
+  tank.x = 20;
+  tank.y = 20;
 
   map.addObject(tank);
 
@@ -17,6 +19,31 @@ $(function () {
   b2 = new Brick(); b2.x = 10; b2.y = 10;
   b3 = new Brick(); b3.x = 20; b3.y = 1;
   b4 = new Brick(); b4.x = 1; b4.y = 19;
+
+  b5 = new Brick({
+    sizeX: 60,
+    sizeY: 1
+  });
+  b6 = new Brick({
+    sizeX: 60,
+    sizeY: 1,
+    y: 35
+  });
+  b7 = new Brick({
+    sizeX: 1,
+    sizeY: 34,
+    y: 1
+  });
+  b8 = new Brick({
+    sizeX: 1,
+    sizeY: 34,
+    y: 1,
+    x: 59
+  });
+  map.addObject(b5);
+  map.addObject(b6);
+  map.addObject(b7);
+  map.addObject(b8);
 
   map.addObject(b1);
   map.addObject(b2);

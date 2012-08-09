@@ -27,7 +27,7 @@ GameObject.prototype = {
   xVel: 0,
   yVel: 0,
   isMoving: false,
-  needsRendering: false,
+  needsRendering: true,
 
   sizeX: 0,
   sizeY: 0,
@@ -51,9 +51,6 @@ GameObject.prototype = {
       y2 = this.y + this.sizeY;
     else
       y2 = y1;
-    // just for testing
-    if (x1 < 0 || x2 >= 60) { this.destroy(); return; }
-    if (y1 < 0 || y2 >= 36) { this.destroy(); return; }
 
     var i, j;
     for (j = 0; j < this.sizeY; j++) {
@@ -95,8 +92,8 @@ GameObject.prototype = {
       top: this.y * 10
     });
 
-    if(this.type === TYPE.TANK){
-        switch(this.direction){
+    if (this.type === TYPE.TANK) {
+        switch (this.direction) {
             case DIRECTION.NORTH :
                 this.domElement.css("-webkit-transform","rotate(0deg)");
                 break;

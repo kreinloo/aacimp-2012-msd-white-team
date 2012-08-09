@@ -21,15 +21,21 @@ Map.prototype = {
       if (this.objects[objKey].type === TYPE.BULLET) { continue; }
       collision = this.objects[objKey].update();
       if (collision) {
-        console.log(collision)
+        console.log(collision);
       }
     }
   },
 
   updateBullets: function () {
+    var collision;
     for (var objKey in this.objects) {
       if (this.objects[objKey].type !== TYPE.BULLET) { continue; }
-      this.objects[objKey].update();
+      collision = this.objects[objKey].update();
+      if (collision) {
+        console.log(collision);
+        var bullet = this.objects[collision[0]];
+        bullet.destroy();
+      }
     }
   },
 
@@ -51,6 +57,12 @@ Map.prototype = {
 
   removeObject: function (obj) {
     delete this.objects[obj.uid];
+    var i, j;
+    for (j = 0; j < obj.sizeY; j++) {
+      for (i = 0; i < obj.sizeX; i++) {
+        this.map[obj.y + j][obj.x + i] = 0;
+      }
+    }
   },
 
   // debugging
