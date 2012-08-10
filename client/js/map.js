@@ -21,7 +21,6 @@ Map.prototype = {
       if (this.objects[objKey].type === TYPE.BULLET) { continue; }
       collision = this.objects[objKey].update();
       if (collision) {
-        console.log(collision);
       }
     }
   },
@@ -32,7 +31,7 @@ Map.prototype = {
       if (this.objects[objKey].type !== TYPE.BULLET) { continue; }
       collision = this.objects[objKey].update();
       if (collision) {
-        console.log(collision);
+        this.handleBulletCollision(collision);
         var bullet = this.objects[collision[0]];
         bullet.destroy();
       }
@@ -70,5 +69,12 @@ Map.prototype = {
     for (var i = 0; i < 36; i++) {
       console.log(this.map[i]);
     }
+  },
+
+  handleBulletCollision: function (objIDs) {
+    var bullet = this.objects[objIDs[0]];
+    var object = this.objects[objIDs[1]];
+    object.registerHit();
   }
+
 };

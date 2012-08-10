@@ -15,6 +15,8 @@ Tank.prototype = new GameObject({
   sizeX: 3,
   sizeY: 3,
 
+  isDestructible: true,
+
   moveTo: function (x, y) {
     this.x = x;
     this.y = y;

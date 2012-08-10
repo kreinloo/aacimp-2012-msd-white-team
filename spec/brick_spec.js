@@ -8,8 +8,11 @@ describe("Brick", function () {
 
   var brick;
 
-  it("should have the right type identifier", function () {
+  beforeEach(function () {
     brick = new Brick();
+  });
+
+  it("should have the right type identifier", function () {
     expect(brick.type).toEqual(TYPE.BRICK);
   });
 

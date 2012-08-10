@@ -43,6 +43,7 @@ function Bullet (tank) {
     xVel: xVel,
     yVel: yVel
   });
+
 }
 
 Bullet.prototype = new GameObject({
