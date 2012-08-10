@@ -119,11 +119,11 @@ $(function () {
   $(window).bind('acc', function (e) {
       var params =
         Math.abs(e.accX) > Math.abs(e.accY)
-        ? {acc: e.accX, velProp: 'xVel', directions: {-1: DIRECTION.EAST,  +1: DIRECTION.WEST }}
-        : {acc: e.accY, velProp: 'yVel', directions: {-1: DIRECTION.SOUTH, +1: DIRECTION.NORTH}};
+        ? {acc: e.accX, velProp: 'xVel', directions: [DIRECTION.EAST,  DIRECTION.WEST]}
+        : {acc: e.accY, velProp: 'yVel', directions: [DIRECTION.SOUTH, DIRECTION.NORTH]};
 
       if (Math.abs(params.acc) > accActivationLevel) {
-        var dir = params.acc > 0 ? +1 : -1;
+        var dir = params.acc > 0 ? 1 : 0;
         tank[params.velProp] = dir;
         tank.direction = params.directions[dir];
       } else {
