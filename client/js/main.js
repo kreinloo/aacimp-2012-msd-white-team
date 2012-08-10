@@ -114,7 +114,7 @@ $(function () {
 
   });
 
-  var accActivationLevel = 30;
+  var accActivationLevel = 15;
 
   $(window).bind('acc', function (e) {
       var params =
