@@ -6,8 +6,10 @@
 
 */
 
-var BRICK = {
-  STONE_WALL    : 0x000101
+var BRICK_TYPE = {
+  STONE_WALL  : 0x000101,
+  FOREST      : 0x000102,
+  ROCK        : 0x000103
 };
 
 var MESSAGE = {

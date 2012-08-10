@@ -22,23 +22,31 @@ $(function () {
 
   b5 = new Brick({
     sizeX: 60,
-    sizeY: 1
+    sizeY: 1,
+    brickType: BRICK_TYPE.STONE_WALL,
+    isDestructible: false
   });
   b6 = new Brick({
     sizeX: 60,
     sizeY: 1,
-    y: 35
+    y: 35,
+    brickType: BRICK_TYPE.STONE_WALL,
+    isDestructible: false
   });
   b7 = new Brick({
     sizeX: 1,
     sizeY: 34,
-    y: 1
+    y: 1,
+    brickType: BRICK_TYPE.STONE_WALL,
+    isDestructible: false
   });
   b8 = new Brick({
     sizeX: 1,
     sizeY: 34,
     y: 1,
-    x: 59
+    x: 59,
+    brickType: BRICK_TYPE.STONE_WALL,
+    isDestructible: false
   });
   map.addObject(b5);
   map.addObject(b6);

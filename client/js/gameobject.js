@@ -32,6 +32,9 @@ GameObject.prototype = {
   sizeX: 0,
   sizeY: 0,
 
+  isDestructible: true,
+  hp: 3,
+
   update: function () {
     if (this.xVel === 0 && this.yVel === 0) { return null; }
 
@@ -115,7 +118,17 @@ GameObject.prototype = {
   destroy: function () {
     map.removeObject(this);
     this.domElement.remove();
+  },
+
+  registerHit: function () {
+    if (this.isDestructible) {
+      this.hp--;
+      if (this.hp <= 0) {
+        this.destroy();
+      }
+    }
   }
+
 };
 
 GameObject.AUTO_INCREMENT = 0;
