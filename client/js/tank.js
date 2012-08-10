@@ -4,8 +4,8 @@
 
 */
 
-function Tank () {
-  GameObject.call(this);
+function Tank (args) {
+  GameObject.call(this, args);
 }
 
 Tank.prototype = new GameObject({

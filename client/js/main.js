@@ -15,10 +15,14 @@ $(function () {
 
   map.addObject(tank);
 
+  map.addObject(new Tank({ x: 6, y: 6 }));
+
   b1 = new Brick(); b1.x = 1; b1.y = 10;
   b2 = new Brick(); b2.x = 10; b2.y = 10;
   b3 = new Brick(); b3.x = 20; b3.y = 1;
   b4 = new Brick(); b4.x = 1; b4.y = 19;
+
+  map.addObject(new Brick({x: 20, y: 25, sizeX: 1, sizeY: 1}));
 
   b5 = new Brick({
     sizeX: 60,
@@ -74,27 +78,32 @@ $(function () {
       case 38:
         tank.yVel = -1;
         tank.direction = DIRECTION.NORTH;
-        return false;
+        break;
 
       case 40:
         tank.yVel = +1;
         tank.direction = DIRECTION.SOUTH;
-        return false;
+        break;
 
       case 37:
         tank.xVel = -1;
         tank.direction = DIRECTION.WEST;
-        return false;
+        break;
 
       case 39:
         tank.xVel = +1;
         tank.direction = DIRECTION.EAST;
-        return false;
+        break;
 
       case 32:
         tank.shoot();
-        return false;
+        break;
     }
+
+    // if tank does not move but changes direction, it should be repainted
+    tank.needsRendering = true;
+    tank.render();
+    return false;
 
   });
 
