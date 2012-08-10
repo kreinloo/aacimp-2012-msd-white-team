@@ -8,8 +8,11 @@ describe("Map", function () {
 
   var map;
 
-  it("should add a new object to its matrix", function () {
+  beforeEach(function () {
     map = new Map();
+  })
+
+  it("should add a new object to its matrix", function () {
     var tank = new Tank();
     tank.x = 10;
     tank.y = 20;
