@@ -35,7 +35,11 @@ var EVENT = {
 var TYPE = {
   TANK          : 'tank',
   BULLET        : 'bullet',
-  BRICK         : 'brick'
+  BRICK         : 'brick',
+
+  FOREST        : 'forest',
+  WALL          : 'wall',
+  STONE         : 'stone'
 };
 
 var MAP = {

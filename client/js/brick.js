@@ -9,7 +9,7 @@ function Brick (args) {
 }
 
 Brick.prototype = new GameObject({
-  type: TYPE.BRICK,
+  type: TYPE.WALL,
   sizeX: 3,
   sizeY: 3,
   brickType: BRICK_TYPE.ROCK

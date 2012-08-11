@@ -33,6 +33,7 @@ GameObject.prototype = {
   sizeY: 0,
 
   isDestructible: true,
+  isPenetrable: false,
   hp: 3,
 
   update: function () {
@@ -59,7 +60,8 @@ GameObject.prototype = {
     for (j = 0; j < this.sizeY; j++) {
       for (i = 0; i < this.sizeX; i++) {
         if (map.map[this.y + j][this.x + i] !== 0 &&
-            map.map[this.y + j][this.x + i] !== this.uid) {
+            map.map[this.y + j][this.x + i] !== this.uid &&
+            !map.objects[map.map[this.y + j][this.x + i]].isPenetrable) {
           var objId = map.map[this.y + j][this.x + i];
           this.x -= this.xVel;
           this.y -= this.yVel;
