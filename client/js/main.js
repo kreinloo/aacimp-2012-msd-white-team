@@ -157,7 +157,7 @@ $(function () {
       }
 
       var time = Date.now();
-      if (time - prevAccEvent < 500) {
+      if (time - prevAccEvent < 200) {
           return;
       }
       prevAccEvent = time;
