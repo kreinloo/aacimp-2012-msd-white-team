@@ -1,49 +1,49 @@
-#arrowUp{
-    height: 4%;
-    width: 4%;
+.arrow {
+    height: 20px;
+    width: 40px;
     background-image: url("../gfx/arrow.gif");
     background-repeat: no-repeat;
     background-size: cover;
     position: absolute;
+}
+
+#arrowUp, #arrowDown {
+    right: 40%;
+}
+#arrowUp{
     top: 68%;
-    right: 5%;
 }
 #arrowDown{
-    height: 4%;
-    width: 4%;
-    background-image: url("../gfx/arrow.gif");
-    background-repeat: no-repeat;
-    background-size: cover;
-    position:absolute;
     top: 80%;
-    right: 5%;
+    transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
     -webkit-transform: rotate(-180deg);
+    -ms-transform: rotate(-180deg);
+    -o-transform: rotate(-180deg);
+}
+
+#arrowLeft, #arrowRight {
+    top: 74%;
 }
 #arrowRight{
-    height: 4%;
-    width: 4%;
-    background-image: url("../gfx/arrow.gif");
-    background-repeat: no-repeat;
-    background-size: cover;
-    position:absolute;
-    top: 74%;
-    right: 2%;
+    right: 16%;
+    transform: rotate(-270deg);
+    -moz-transform: rotate(-270deg);
     -webkit-transform: rotate(-270deg);
+    -ms-transform: rotate(-270deg);
+    -o-transform: rotate(-270deg);
 }
 #arrowLeft{
-    height: 4%;
-    width: 4%;
-    background-image: url("../gfx/arrow.gif");
-    background-repeat: no-repeat;
-    background-size: cover;
-    position:absolute;
-    top: 74%;
-    right: 8%;
+    right: 64%;
+    transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
 }
 #buttonShoot{
     height: 4%;
-    width: 8%;
+    width: 90%;
     background-color: blue;
     position: absolute;
     top: 60%;
