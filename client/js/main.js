@@ -159,12 +159,13 @@ $(function () {
   $(window).bind('acc', function (e) {
       var params =
         Math.abs(e.accX) > Math.abs(e.accY)
-        ? {acc: e.accX, velProp: 'xVel', actions: ['moveLeft', 'moveRight']}
-        : {acc: e.accY, velProp: 'yVel', actions: ['moveDown', 'moveUp']};
+        ? {acc: e.accX, actions: ['moveLeft', 'moveRight']}
+        : {acc: e.accY, actions: ['moveDown', 'moveUp']};
 
       if (Math.abs(e.accX) > accActivationLevel) {
         var dir = params.acc > 0 ? 0 : 1;
         var action = params.actions[dir];
+        player.stop();
         player[action]();
       } else {
         player.stop();
