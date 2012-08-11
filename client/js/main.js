@@ -162,7 +162,7 @@ $(function () {
       }
 
       var len = Math.sqrt(Math.pow(e.accX, 2) + Math.pow(e.accY, 2));
-      if (len > 100) {
+      if (len > 60) {
           player.shoot();
           return;
       }
