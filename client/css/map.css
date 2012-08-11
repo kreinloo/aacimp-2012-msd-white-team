@@ -8,7 +8,11 @@
 
 .gameobject {
 	position: absolute;
-	-webkit-transition: left 100ms linear, top 100ms linear;
+	transition: all 100ms linear;
+	-moz-transition: all 100ms linear;
+	-webkit-transition: all 100ms linear;
+	-ms-transition: all 100ms linear;
+	-o-transition: all 100ms linear;
 }
 
 .tank   {
@@ -17,7 +21,11 @@
 }
 .bullet {
 	background-image: url("../gfx/bullet.png");
-	-webkit-transition: all 30ms;
+	transition: all 30ms linear;
+	-moz-transition: all 30ms linear;
+	-webkit-transition: all 30ms linear;
+	-ms-transition: all 30ms linear;
+	-o-transition: all 30ms linear;
 }
 .brick  {
     background-image: url("../gfx/stone.png");

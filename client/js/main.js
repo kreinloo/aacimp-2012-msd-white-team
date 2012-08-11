@@ -134,11 +134,15 @@ $(function () {
       case 32:
         player.shoot();
         break;
+
+      default:
+        return;
     }
 
     // if tank does not move but changes direction, it should be repainted
     player.tank.needsRendering = true;
     player.tank.render();
+
     return false;
 
   });
@@ -156,20 +160,20 @@ $(function () {
 
   });
 
-  var accActivationLevel = 15;
+  var accActivationLevel = 30;
 
   $(window).bind('acc', function (e) {
       var params =
         Math.abs(e.accX) > Math.abs(e.accY)
-        ? {acc: e.accX, velProp: 'xVel', directions: [DIRECTION.EAST,  DIRECTION.WEST]}
-        : {acc: e.accY, velProp: 'yVel', directions: [DIRECTION.SOUTH, DIRECTION.NORTH]};
+        ? {acc: e.accX, velProp: 'xVel', actions: ['moveLeft', 'moveRight']}
+        : {acc: e.accY, velProp: 'yVel', actions: ['moveDown', 'moveUp']};
 
-      if (Math.abs(params.acc) > accActivationLevel) {
-        var dir = params.acc > 0 ? 1 : 0;
-        tank[params.velProp] = dir;
-        tank.direction = params.directions[dir];
+      if (Math.abs(e.accX) > accActivationLevel) {
+        var dir = params.acc > 0 ? 0 : 1;
+        var action = params.actions[dir];
+        player[action]();
       } else {
-        tank.xVel = tank.yVel = 0;
+        player.stop();
       }
   });
 
