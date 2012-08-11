@@ -152,7 +152,7 @@ $(function () {
 
   });
 
-  var accActivationLevel = 30;
+  var accActivationLevel = 15;
 
   $(window).bind('acc', function (e) {
       var params =
@@ -169,4 +169,14 @@ $(function () {
       }
   });
 
+  $('.arrow')
+  .mousedown(function() {
+    var action = $(this).data('action');
+    player[action]();
+  })
+  .mouseup(function() {
+    player.stop();
+  });
+
+  $('#buttonShoot').click(function() { player.shoot() });
 });
