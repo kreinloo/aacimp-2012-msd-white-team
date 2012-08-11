@@ -7,9 +7,9 @@ function Map () {
 
 Map.prototype = {
   initialize: function () {
-    for (var i = 0; i < 36; i++) {
+    for (var i = 0; i < MAP.SIZE_Y; i++) {
       this.map[i] = [];
-      for (var j = 0; j < 60; j++) {
+      for (var j = 0; j < MAP.SIZE_X; j++) {
         this.map[i][j] = 0;
       }
     }
@@ -20,8 +20,7 @@ Map.prototype = {
     for (var objKey in this.objects) {
       if (this.objects[objKey].type === TYPE.BULLET) { continue; }
       collision = this.objects[objKey].update();
-      if (collision) {
-      }
+      if (collision) {}
     }
   },
 
@@ -45,10 +44,20 @@ Map.prototype = {
   },
 
   addObject: function (obj) {
+    var i, j;
+    if (obj.type !== TYPE.BULLET) {
+      for (i = 0; i < obj.sizeY; i++) {
+        for (j = 0; j < obj.sizeX; j++) {
+          if (this.map[obj.y + i][obj.x + j] !== 0) {
+            return;
+          }
+        }
+      }
+    }
     this.objects[obj.uid] = obj;
     this.domElement.append(obj.domElement);
-    for (var i = 0; i < obj.sizeY; i++) {
-      for (var j = 0; j < obj.sizeX; j++) {
+    for (i = 0; i < obj.sizeY; i++) {
+      for (j = 0; j < obj.sizeX; j++) {
         this.map[obj.y + i][obj.x + j] = obj.uid;
       }
     }
@@ -66,7 +75,7 @@ Map.prototype = {
 
   // debugging
   printMap: function () {
-    for (var i = 0; i < 36; i++) {
+    for (var i = 0; i < MAP.SIZE_Y; i++) {
       console.log(this.map[i]);
     }
   },
@@ -74,6 +83,7 @@ Map.prototype = {
   handleBulletCollision: function (objIDs) {
     var bullet = this.objects[objIDs[0]];
     var object = this.objects[objIDs[1]];
+    if (object.uid === bullet.tankId) { return; }
     object.registerHit();
   }
 

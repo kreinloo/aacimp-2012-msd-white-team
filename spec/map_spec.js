@@ -21,4 +21,14 @@ describe("Map", function () {
     expect(map.map[20+tank.sizeY-1][10+tank.sizeX-1]).toEqual(tank.uid);
   });
 
+  it("should not add an object to map if something is already at that position",
+    function() {
+    var tank1 = new Tank();
+    var tank2 = new Tank();
+    map.addObject(tank1);
+    expect(Object.keys(map.objects).length).toEqual(1);
+    map.addObject(tank1);
+    expect(Object.keys(map.objects).length).toEqual(1);
+  });
+
 });

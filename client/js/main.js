@@ -6,7 +6,6 @@
 
 var map;
 var player;
-var brick;
 
 $(function () {
 
@@ -15,56 +14,6 @@ $(function () {
 
   map.addObject(player.tank);
   map.addObject(new Tank({ x: 40, y: 10 }));
-/*
-    for (var i=0; i<33;i += 3 ){
-        for (var j=0;j<57;j += 3){
-            var random=Math.floor(Math.random()*8);
-            switch(random)
-            {
-                case 0:
-                    brick = new Brick();
-                    brick.x = j;
-                    brick.y = i;
-                    brick.brickType = BRICK_TYPE.FOREST;
-                    map.addObject(brick);
-                    break;
-                case 1:
-                    brick = new Brick();
-                    brick.x = j;
-                    brick.y = i;
-                    brick.brickType = BRICK_TYPE.ROCK;
-                    map.addObject(brick);
-                    break;
-                case 2:
-                    brick = new Brick();
-                    brick.x = j;
-                    brick.y = i;
-                    brick.brickType = BRICK_TYPE.STONE_WALL;
-                    brick.isDestructible= false;
-                    map.addObject(brick);
-                    break;
-                case 3:
-                    brick = new Brick({sizeX:1,sizeY:3});
-                    brick.x = j;
-                    brick.y = i;
-                    brick.brickType = BRICK_TYPE.ROCK;
-                    map.addObject(brick);
-                    break;
-                default:
-                    //nothing to add
-                    break;
-            }
-        }
-    }
-*/
-  var b1 = new Brick({isDestructible: false, sizeX: 2, sizeY: 2}); b1.x = 1; b1.y = 10;
-  var b2 = new Brick({isDestructible: false, sizeX: 2, sizeY: 2}); b2.x = 10; b2.y = 10;
-  var b3 = new Brick({isDestructible: false, sizeX: 1, sizeY: 3}); b3.x = 20; b3.y = 1;
-  var b4 = new Brick({isDestructible: false, sizeX: 4, sizeY: 1}); b4.x = 1; b4.y = 19;
-
-  map.addObject(new Brick({x: 20, y: 25, sizeX: 1, sizeY: 1, type: TYPE.STONE}));
-  map.addObject(new Brick({x: 20, y: 10, isPenetrable: true, type: TYPE.FOREST,
-    sizeX: 6, sizeY: 6}));
 
   b5 = new Brick({
     sizeX: 60,
@@ -99,10 +48,48 @@ $(function () {
   map.addObject(b7);
   map.addObject(b8);
 
-  map.addObject(b1);
-  map.addObject(b2);
-  map.addObject(b3);
-  map.addObject(b4);
+  var i, j, random, brick;
+  for (i = 0; i < 33; i += 3 ) {
+    for (j = 0; j < 57; j += 3) {
+      random = Math.floor(Math.random()*8);
+      switch (random) {
+        case 0:
+          brick = new Brick({
+            x: j,
+            y: i,
+            type: TYPE.FOREST,
+            isPenetrable: true,
+            isDestructible: false
+          });
+          map.addObject(brick);
+          break;
+        case 1:
+          brick = new Brick({
+            x: j,
+            y: i,
+            type: TYPE.WALL,
+            sizeX: Math.floor(Math.random() * 2) + 1,
+            sizeY: Math.floor(Math.random() * 2) + 1,
+            isDestructible: false
+          });
+          map.addObject(brick);
+          break;
+        case 2:
+          brick = new Brick({
+            x: j,
+            y: i,
+            type: TYPE.STONE,
+            sizeX: 1,
+            sizeY: 1
+          });
+          map.addObject(brick);
+          break;
+        default:
+          //nothing to add
+          break;
+      }
+    }
+  }
 
   setInterval(function () {
     map.updateObjects();
@@ -162,34 +149,57 @@ $(function () {
 
   });
 
-  var accActivationLevel = 15;
+  var accActivationLevel = 8, prevAccEvent = 0;
 
   $(window).bind('acc', function (e) {
-      if (!$('#accelerometer').prop('checked')) return;
+      if (!$('#accelerometer').prop('checked')) {
+          return;
+      }
+
+      var time = Date.now();
+      if (time - prevAccEvent < 200) {
+          return;
+      }
+      prevAccEvent = time;
 
       var params =
         Math.abs(e.accX) > Math.abs(e.accY)
         ? {acc: e.accX, actions: ['moveLeft', 'moveRight']}
         : {acc: e.accY, actions: ['moveDown', 'moveUp']};
 
-      if (Math.abs(e.accX) > accActivationLevel) {
-        var dir = params.acc > 0 ? 0 : 1;
-        var action = params.actions[dir];
-        player.stop();
-        player[action]();
-      } else {
-        player.stop();
+      player.stop();
+      if (Math.abs(params.acc) < accActivationLevel) {
+          return;
       }
+      var dir = params.acc > 0 ? 1 : 0;
+      var action = params.actions[dir];
+      player[action]();
   });
 
   $('.arrow')
   .bind('mousedown touchstart', function() {
     var action = $(this).data('action');
     player[action]();
+    return false;
   })
   .bind('mouseup touchend', function() {
     player.stop();
+    return false;
   });
 
-  $('#buttonShoot').click(function() { player.shoot() });
+  var shootingId = false;
+
+  $('#buttonShoot')
+  .bind('mousedown touchstart', function() {
+     function shooting() {
+         player.shoot();
+         shootingId = setTimeout(shooting, 50);
+     }
+     shooting();
+     return false;
+  })
+  .bind('mouseup touchend', function() {
+    clearTimeout(shootingId);
+    return false;
+  });
 });
