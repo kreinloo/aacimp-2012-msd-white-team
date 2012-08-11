@@ -149,10 +149,17 @@ $(function () {
 
   });
 
-  var accActivationLevel = 8;
+  var accActivationLevel = 8, prevAccEvent = 0;
 
   $(window).bind('acc', function (e) {
-      if (!$('#accelerometer').prop('checked')) return;
+      var time = Date.now();
+      if (time - prevAccEvent < 500) {
+          return;
+      }
+      prevAccEvent = time;
+      if (!$('#accelerometer').prop('checked')) {
+          return;
+      }
 
       var params =
         Math.abs(e.accX) > Math.abs(e.accY)
