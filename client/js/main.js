@@ -6,6 +6,7 @@
 
 var map;
 var player;
+var brick;
 
 $(function () {
 
@@ -21,7 +22,7 @@ $(function () {
             switch(random)
             {
                 case 0:
-                    var brick = new Brick();
+                    brick = new Brick();
                     brick.x = j;
                     brick.y = i;
                     brick.brickType = BRICK_TYPE.FOREST;
@@ -40,6 +41,13 @@ $(function () {
                     brick.y = i;
                     brick.brickType = BRICK_TYPE.STONE_WALL;
                     brick.isDestructible= false;
+                    map.addObject(brick);
+                    break;
+                case 3:
+                    brick = new Brick({sizeX:1,sizeY:3});
+                    brick.x = j;
+                    brick.y = i;
+                    brick.brickType = BRICK_TYPE.ROCK;
                     map.addObject(brick);
                     break;
                 default:
