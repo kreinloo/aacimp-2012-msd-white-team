@@ -5,17 +5,15 @@
 */
 
 var map;
+var player;
 
 $(function () {
 
   map = new Map();
-  var tank = new Tank();
-  tank.x = 20;
-  tank.y = 20;
+  player = new Player();
 
-  map.addObject(tank);
-
-  map.addObject(new Tank({ x: 6, y: 6 }));
+  map.addObject(player.tank);
+  map.addObject(new Tank({ x: 40, y: 10 }));
 
   b1 = new Brick(); b1.x = 1; b1.y = 10;
   b2 = new Brick(); b2.x = 10; b2.y = 10;
@@ -76,33 +74,29 @@ $(function () {
 
     switch (e.keyCode) {
       case 38:
-        tank.yVel = -1;
-        tank.direction = DIRECTION.NORTH;
+        player.moveUp();
         break;
 
       case 40:
-        tank.yVel = +1;
-        tank.direction = DIRECTION.SOUTH;
+        player.moveDown();
         break;
 
       case 37:
-        tank.xVel = -1;
-        tank.direction = DIRECTION.WEST;
+        player.moveLeft();
         break;
 
       case 39:
-        tank.xVel = +1;
-        tank.direction = DIRECTION.EAST;
+        player.moveRight();
         break;
 
       case 32:
-        tank.shoot();
+        player.shoot();
         break;
     }
 
     // if tank does not move but changes direction, it should be repainted
-    tank.needsRendering = true;
-    tank.render();
+    player.tank.needsRendering = true;
+    player.tank.render();
     return false;
 
   });
@@ -112,12 +106,9 @@ $(function () {
     switch (e.keyCode) {
       case 38:
       case 40:
-        tank.yVel = 0;
-        return false;
-
       case 37:
       case 39:
-        tank.xVel = 0;
+        player.stop();
         return false;
     }
 
