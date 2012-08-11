@@ -148,20 +148,20 @@ $(function () {
 
   });
 
-  var accActivationLevel = 15;
+  var accActivationLevel = 30;
 
   $(window).bind('acc', function (e) {
       var params =
         Math.abs(e.accX) > Math.abs(e.accY)
-        ? {acc: e.accX, velProp: 'xVel', directions: [DIRECTION.EAST,  DIRECTION.WEST]}
-        : {acc: e.accY, velProp: 'yVel', directions: [DIRECTION.SOUTH, DIRECTION.NORTH]};
+        ? {acc: e.accX, velProp: 'xVel', actions: ['moveLeft', 'moveRight']}
+        : {acc: e.accY, velProp: 'yVel', actions: ['moveDown', 'moveUp']};
 
-      if (Math.abs(params.acc) > accActivationLevel) {
+      if (Math.abs(e.accX) > accActivationLevel) {
         var dir = params.acc > 0 ? 1 : 0;
-        tank[params.velProp] = dir;
-        tank.direction = params.directions[dir];
+        var action = params.actions[dir];
+        player[action]();
       } else {
-        tank.xVel = tank.yVel = 0;
+        player.stop();
       }
   });
 
