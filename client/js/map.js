@@ -51,6 +51,7 @@ Map.prototype = {
     for (i = 0; i < obj.sizeY; i++) {
       for (j = 0; j < obj.sizeX; j++) {
         if (this.map[obj.y + i][obj.x + j] !== 0) {
+          obj.domElement.remove();
           return;
         }
       }
@@ -82,6 +83,7 @@ Map.prototype = {
   handleBulletCollision: function (objIDs) {
     var bullet = this.objects[objIDs[0]];
     var object = this.objects[objIDs[1]];
+    if (object.uid === bullet.tankId) { return; }
     object.registerHit();
   }
 
