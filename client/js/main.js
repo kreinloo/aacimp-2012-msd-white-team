@@ -173,11 +173,11 @@ $(function () {
   });
 
   $('.arrow')
-  .mousedown(function() {
+  .bind('mousedown touchstart', function() {
     var action = $(this).data('action');
     player[action]();
   })
-  .mouseup(function() {
+  .bind('mouseup touchend', function() {
     player.stop();
   });
 
