@@ -45,10 +45,18 @@ Map.prototype = {
   },
 
   addObject: function (obj) {
+    var i, j;
     this.objects[obj.uid] = obj;
     this.domElement.append(obj.domElement);
-    for (var i = 0; i < obj.sizeY; i++) {
-      for (var j = 0; j < obj.sizeX; j++) {
+    for (i = 0; i < obj.sizeY; i++) {
+      for (j = 0; j < obj.sizeX; j++) {
+        if (this.map[obj.y + i][obj.x + j] !== 0) {
+          return;
+        }
+      }
+    }
+    for (i = 0; i < obj.sizeY; i++) {
+      for (j = 0; j < obj.sizeX; j++) {
         this.map[obj.y + i][obj.x + j] = obj.uid;
       }
     }

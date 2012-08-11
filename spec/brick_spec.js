@@ -13,7 +13,7 @@ describe("Brick", function () {
   });
 
   it("should have the right type identifier", function () {
-    expect(brick.type).toEqual(TYPE.BRICK);
+    expect(brick.type).toEqual(TYPE.WALL);
   });
 
 });
