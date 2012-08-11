@@ -157,6 +157,8 @@ $(function () {
   var accActivationLevel = 15;
 
   $(window).bind('acc', function (e) {
+      if (!$('#accelerometer').prop('checked')) return;
+
       var params =
         Math.abs(e.accX) > Math.abs(e.accY)
         ? {acc: e.accX, actions: ['moveLeft', 'moveRight']}
