@@ -2,24 +2,24 @@
 	position: absolute;
 	width: 600;
 	height: 360;
-	border: 1px solid red;
+	background-image: url("../gfx/bg.png");
+	background-size: 30px;
 }
 
 .gameobject {
 	position: absolute;
-
 	-webkit-transition: left 100ms linear, top 100ms linear;
 }
 
 .tank   {
-    background-image: url("../gfx/tank-blue.png");
+    background-image: url("../gfx/tank.png");
     background-size: 30px;
 }
 .bullet {
-	background-color: red;
+	background-image: url("../gfx/bullet.png");
 	-webkit-transition: all 30ms;
 }
 .brick  {
-    background-image: url("../gfx/wall.png");
-    background-size: 30px;
+    background-image: url("../gfx/stone.png");
+    background-size: 10px;
 }

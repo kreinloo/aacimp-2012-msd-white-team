@@ -5,20 +5,56 @@
 */
 
 var map;
+var player;
 
 $(function () {
 
   map = new Map();
-  var tank = new Tank();
-  tank.x = 20;
-  tank.y = 20;
+  player = new Player();
 
-  map.addObject(tank);
+  map.addObject(player.tank);
+  map.addObject(new Tank({ x: 40, y: 10 }));
 
-  b1 = new Brick(); b1.x = 1; b1.y = 10;
-  b2 = new Brick(); b2.x = 10; b2.y = 10;
-  b3 = new Brick(); b3.x = 20; b3.y = 1;
-  b4 = new Brick(); b4.x = 1; b4.y = 19;
+    for (var i=0; i<33;i += 3 ){
+        for (var j=0;j<57;j += 3){
+            var random=Math.floor(Math.random()*8);
+            switch(random)
+            {
+                case 0:
+                    var brick = new Brick();
+                    brick.x = j;
+                    brick.y = i;
+                    brick.brickType = BRICK_TYPE.FOREST;
+                    map.addObject(brick);
+                    break;
+                case 1:
+                    brick = new Brick();
+                    brick.x = j;
+                    brick.y = i;
+                    brick.brickType = BRICK_TYPE.ROCK;
+                    map.addObject(brick);
+                    break;
+                case 2:
+                    brick = new Brick();
+                    brick.x = j;
+                    brick.y = i;
+                    brick.brickType = BRICK_TYPE.STONE_WALL;
+                    brick.isDestructible= false;
+                    map.addObject(brick);
+                    break;
+                default:
+                    //nothing to add
+                    break;
+            }
+        }
+    }
+
+  var b1 = new Brick(); b1.x = 1; b1.y = 10;
+  var b2 = new Brick(); b2.x = 10; b2.y = 10;
+  var b3 = new Brick(); b3.x = 20; b3.y = 1;
+  var b4 = new Brick(); b4.x = 1; b4.y = 19;
+
+  map.addObject(new Brick({x: 20, y: 25, sizeX: 1, sizeY: 1}));
 
   b5 = new Brick({
     sizeX: 60,
@@ -72,29 +108,30 @@ $(function () {
 
     switch (e.keyCode) {
       case 38:
-        tank.yVel = -1;
-        tank.direction = DIRECTION.NORTH;
-        return false;
+        player.moveUp();
+        break;
 
       case 40:
-        tank.yVel = +1;
-        tank.direction = DIRECTION.SOUTH;
-        return false;
+        player.moveDown();
+        break;
 
       case 37:
-        tank.xVel = -1;
-        tank.direction = DIRECTION.WEST;
-        return false;
+        player.moveLeft();
+        break;
 
       case 39:
-        tank.xVel = +1;
-        tank.direction = DIRECTION.EAST;
-        return false;
+        player.moveRight();
+        break;
 
       case 32:
-        tank.shoot();
-        return false;
+        player.shoot();
+        break;
     }
+
+    // if tank does not move but changes direction, it should be repainted
+    player.tank.needsRendering = true;
+    player.tank.render();
+    return false;
 
   });
 
@@ -103,12 +140,9 @@ $(function () {
     switch (e.keyCode) {
       case 38:
       case 40:
-        tank.yVel = 0;
-        return false;
-
       case 37:
       case 39:
-        tank.xVel = 0;
+        player.stop();
         return false;
     }
 

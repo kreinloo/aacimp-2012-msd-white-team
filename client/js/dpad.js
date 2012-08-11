@@ -19,7 +19,7 @@ $(function(){
 
   $("#buttonShoot").tap(function(){
       alert("BOOM");
-  });
+  }); 
 
 });
 */
