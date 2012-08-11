@@ -15,6 +15,40 @@ $(function () {
   map.addObject(player.tank);
   map.addObject(new Tank({ x: 40, y: 10 }));
 
+    for (var i=0; i<33;i += 3 ){
+        for (var j=0;j<57;j += 3){
+            var random=Math.floor(Math.random()*8);
+            switch(random)
+            {
+                case 0:
+                    var brick = new Brick();
+                    brick.x = j;
+                    brick.y = i;
+                    brick.brickType = BRICK_TYPE.FOREST;
+                    map.addObject(brick);
+                    break;
+                case 1:
+                    brick = new Brick();
+                    brick.x = j;
+                    brick.y = i;
+                    brick.brickType = BRICK_TYPE.ROCK;
+                    map.addObject(brick);
+                    break;
+                case 2:
+                    brick = new Brick();
+                    brick.x = j;
+                    brick.y = i;
+                    brick.brickType = BRICK_TYPE.STONE_WALL;
+                    brick.isDestructible= false;
+                    map.addObject(brick);
+                    break;
+                default:
+                    //nothing to add
+                    break;
+            }
+        }
+    }
+
   var b1 = new Brick(); b1.x = 1; b1.y = 10;
   var b2 = new Brick(); b2.x = 10; b2.y = 10;
   var b3 = new Brick(); b3.x = 20; b3.y = 1;
