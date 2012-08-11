@@ -27,7 +27,17 @@
 	-ms-transition: all 30ms linear;
 	-o-transition: all 30ms linear;
 }
-.brick  {
+.stone  {
     background-image: url("../gfx/stone.png");
     background-size: 10px;
+}
+
+.forest {
+	background-image: url("../gfx/forest.png");
+	background-size: 30px;
+}
+
+.wall {
+	background-image: url("../gfx/wall.png");
+	background-size: 10px;
 }
