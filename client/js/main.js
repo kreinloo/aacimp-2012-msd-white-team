@@ -114,4 +114,21 @@ $(function () {
 
   });
 
+  var accActivationLevel = 15;
+
+  $(window).bind('acc', function (e) {
+      var params =
+        Math.abs(e.accX) > Math.abs(e.accY)
+        ? {acc: e.accX, velProp: 'xVel', directions: [DIRECTION.EAST,  DIRECTION.WEST]}
+        : {acc: e.accY, velProp: 'yVel', directions: [DIRECTION.SOUTH, DIRECTION.NORTH]};
+
+      if (Math.abs(params.acc) > accActivationLevel) {
+        var dir = params.acc > 0 ? 1 : 0;
+        tank[params.velProp] = dir;
+        tank.direction = params.directions[dir];
+      } else {
+        tank.xVel = tank.yVel = 0;
+      }
+  });
+
 });
