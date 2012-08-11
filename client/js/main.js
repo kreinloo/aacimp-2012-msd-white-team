@@ -178,10 +178,12 @@ $(function () {
   .bind('mousedown touchstart', function() {
     var action = $(this).data('action');
     player[action]();
+    return false;
   })
   .bind('mouseup touchend', function() {
     player.stop();
+    return false;
   });
 
-  $('#buttonShoot').click(function() { player.shoot() });
+  $('#buttonShoot').click(function() { player.shoot(); return false; });
 });
