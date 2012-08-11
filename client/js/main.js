@@ -184,11 +184,15 @@ $(function () {
 
   $('.arrow')
   .bind('mousedown touchstart', function() {
-     shootingId = setInterval(function() { player.shoot() }, 200);
+     function shooting() {
+         player.shoot();
+         shootingId = setTimeout(shooting, 0);
+     }
+     shooting();
      return false;
   })
   .bind('mouseup touchend', function() {
-      clearInterval(shootingId);
-      return false;
+    clearTimeout(shootingId);
+    return false;
   });
 });
