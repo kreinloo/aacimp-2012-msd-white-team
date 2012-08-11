@@ -15,10 +15,10 @@ $(function () {
   map.addObject(player.tank);
   map.addObject(new Tank({ x: 40, y: 10 }));
 
-  b1 = new Brick(); b1.x = 1; b1.y = 10;
-  b2 = new Brick(); b2.x = 10; b2.y = 10;
-  b3 = new Brick(); b3.x = 20; b3.y = 1;
-  b4 = new Brick(); b4.x = 1; b4.y = 19;
+  var b1 = new Brick(); b1.x = 1; b1.y = 10;
+  var b2 = new Brick(); b2.x = 10; b2.y = 10;
+  var b3 = new Brick(); b3.x = 20; b3.y = 1;
+  var b4 = new Brick(); b4.x = 1; b4.y = 19;
 
   map.addObject(new Brick({x: 20, y: 25, sizeX: 1, sizeY: 1}));
 
