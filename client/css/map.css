@@ -8,6 +8,7 @@
 
 .gameobject {
 	position: absolute;
+	transition: left 100ms linear, top 100ms linear;
 	-webkit-transition: left 100ms linear, top 100ms linear;
 }
 
@@ -17,6 +18,7 @@
 }
 .bullet {
 	background-image: url("../gfx/bullet.png");
+	transition: all 30ms;
 	-webkit-transition: all 30ms;
 }
 .brick  {
