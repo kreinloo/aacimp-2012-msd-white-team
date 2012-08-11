@@ -149,24 +149,31 @@ $(function () {
 
   });
 
-  var accActivationLevel = 15;
+  var accActivationLevel = 8, prevAccEvent = 0;
 
   $(window).bind('acc', function (e) {
-      if (!$('#accelerometer').prop('checked')) return;
+      if (!$('#accelerometer').prop('checked')) {
+          return;
+      }
+
+      var time = Date.now();
+      if (time - prevAccEvent < 200) {
+          return;
+      }
+      prevAccEvent = time;
 
       var params =
         Math.abs(e.accX) > Math.abs(e.accY)
         ? {acc: e.accX, actions: ['moveLeft', 'moveRight']}
         : {acc: e.accY, actions: ['moveDown', 'moveUp']};
 
-      if (Math.abs(e.accX) > accActivationLevel) {
-        var dir = params.acc > 0 ? 0 : 1;
-        var action = params.actions[dir];
-        player.stop();
-        player[action]();
-      } else {
-        player.stop();
+      player.stop();
+      if (Math.abs(params.acc) < accActivationLevel) {
+          return;
       }
+      var dir = params.acc > 0 ? 1 : 0;
+      var action = params.actions[dir];
+      player[action]();
   });
 
   $('.arrow')
@@ -180,5 +187,19 @@ $(function () {
     return false;
   });
 
-  $('#buttonShoot').click(function() { player.shoot(); return false; });
+  var shootingId = false;
+
+  $('#buttonShoot')
+  .bind('mousedown touchstart', function() {
+     function shooting() {
+         player.shoot();
+         shootingId = setTimeout(shooting, 50);
+     }
+     shooting();
+     return false;
+  })
+  .bind('mouseup touchend', function() {
+    clearTimeout(shootingId);
+    return false;
+  });
 });
