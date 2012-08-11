@@ -152,6 +152,8 @@ $(function () {
   var accActivationLevel = 8, prevAccEvent = 0;
 
   $(window).bind('acc', function (e) {
+      console.log(Math.floor(e.accX) + ':' + Math.floor(e.accY));
+
       var time = Date.now();
       if (time - prevAccEvent < 500) {
           return;
