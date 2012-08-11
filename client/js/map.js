@@ -20,8 +20,7 @@ Map.prototype = {
     for (var objKey in this.objects) {
       if (this.objects[objKey].type === TYPE.BULLET) { continue; }
       collision = this.objects[objKey].update();
-      if (collision) {
-      }
+      if (collision) {}
     }
   },
 
@@ -46,16 +45,17 @@ Map.prototype = {
 
   addObject: function (obj) {
     var i, j;
-    this.objects[obj.uid] = obj;
-    this.domElement.append(obj.domElement);
-    for (i = 0; i < obj.sizeY; i++) {
-      for (j = 0; j < obj.sizeX; j++) {
-        if (this.map[obj.y + i][obj.x + j] !== 0) {
-          obj.domElement.remove();
-          return;
+    if (obj.type !== TYPE.BULLET) {
+      for (i = 0; i < obj.sizeY; i++) {
+        for (j = 0; j < obj.sizeX; j++) {
+          if (this.map[obj.y + i][obj.x + j] !== 0) {
+            return;
+          }
         }
       }
     }
+    this.objects[obj.uid] = obj;
+    this.domElement.append(obj.domElement);
     for (i = 0; i < obj.sizeY; i++) {
       for (j = 0; j < obj.sizeX; j++) {
         this.map[obj.y + i][obj.x + j] = obj.uid;

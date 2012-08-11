@@ -15,15 +15,6 @@ $(function () {
   map.addObject(player.tank);
   map.addObject(new Tank({ x: 40, y: 10 }));
 
-  var b1 = new Brick({isDestructible: false, sizeX: 2, sizeY: 2}); b1.x = 1; b1.y = 10;
-  var b2 = new Brick({isDestructible: false, sizeX: 2, sizeY: 2}); b2.x = 10; b2.y = 10;
-  var b3 = new Brick({isDestructible: false, sizeX: 1, sizeY: 3}); b3.x = 20; b3.y = 1;
-  var b4 = new Brick({isDestructible: false, sizeX: 4, sizeY: 1}); b4.x = 1; b4.y = 19;
-
-  map.addObject(new Brick({x: 20, y: 25, sizeX: 1, sizeY: 1, type: TYPE.STONE}));
-  map.addObject(new Brick({x: 20, y: 10, isPenetrable: true, type: TYPE.FOREST,
-    sizeX: 6, sizeY: 6}));
-
   b5 = new Brick({
     sizeX: 60,
     sizeY: 1,
@@ -56,11 +47,6 @@ $(function () {
   map.addObject(b6);
   map.addObject(b7);
   map.addObject(b8);
-
-  map.addObject(b1);
-  map.addObject(b2);
-  map.addObject(b3);
-  map.addObject(b4);
 
   var i, j, random, brick;
   for (i = 0; i < 33; i += 3 ) {
