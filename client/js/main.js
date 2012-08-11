@@ -180,5 +180,15 @@ $(function () {
     return false;
   });
 
-  $('#buttonShoot').click(function() { player.shoot(); return false; });
+  var shootingId = false;
+
+  $('.arrow')
+  .bind('mousedown touchstart', function() {
+     shootingId = setInterval(function() { player.shoot() }, 200);
+     return false;
+  })
+  .bind('mouseup touchend', function() {
+      clearInterval(shootingId);
+      return false;
+  });
 });
