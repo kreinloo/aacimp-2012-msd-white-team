@@ -15,7 +15,7 @@ $(function () {
 
   map.addObject(player.tank);
   map.addObject(new Tank({ x: 40, y: 10 }));
-
+/*
     for (var i=0; i<33;i += 3 ){
         for (var j=0;j<57;j += 3){
             var random=Math.floor(Math.random()*8);
@@ -56,13 +56,15 @@ $(function () {
             }
         }
     }
+*/
+  var b1 = new Brick({isDestructible: false, sizeX: 2, sizeY: 2}); b1.x = 1; b1.y = 10;
+  var b2 = new Brick({isDestructible: false, sizeX: 2, sizeY: 2}); b2.x = 10; b2.y = 10;
+  var b3 = new Brick({isDestructible: false, sizeX: 1, sizeY: 3}); b3.x = 20; b3.y = 1;
+  var b4 = new Brick({isDestructible: false, sizeX: 4, sizeY: 1}); b4.x = 1; b4.y = 19;
 
-  var b1 = new Brick(); b1.x = 1; b1.y = 10;
-  var b2 = new Brick(); b2.x = 10; b2.y = 10;
-  var b3 = new Brick(); b3.x = 20; b3.y = 1;
-  var b4 = new Brick(); b4.x = 1; b4.y = 19;
-
-  map.addObject(new Brick({x: 20, y: 25, sizeX: 1, sizeY: 1}));
+  map.addObject(new Brick({x: 20, y: 25, sizeX: 1, sizeY: 1, type: TYPE.STONE}));
+  map.addObject(new Brick({x: 20, y: 10, isPenetrable: true, type: TYPE.FOREST,
+    sizeX: 6, sizeY: 6}));
 
   b5 = new Brick({
     sizeX: 60,
@@ -160,21 +162,34 @@ $(function () {
 
   });
 
-  var accActivationLevel = 30;
+  var accActivationLevel = 15;
 
   $(window).bind('acc', function (e) {
+      if (!$('#accelerometer').prop('checked')) return;
+
       var params =
         Math.abs(e.accX) > Math.abs(e.accY)
-        ? {acc: e.accX, velProp: 'xVel', actions: ['moveLeft', 'moveRight']}
-        : {acc: e.accY, velProp: 'yVel', actions: ['moveDown', 'moveUp']};
+        ? {acc: e.accX, actions: ['moveLeft', 'moveRight']}
+        : {acc: e.accY, actions: ['moveDown', 'moveUp']};
 
       if (Math.abs(e.accX) > accActivationLevel) {
         var dir = params.acc > 0 ? 0 : 1;
         var action = params.actions[dir];
+        player.stop();
         player[action]();
       } else {
         player.stop();
       }
   });
 
+  $('.arrow')
+  .bind('mousedown touchstart', function() {
+    var action = $(this).data('action');
+    player[action]();
+  })
+  .bind('mouseup touchend', function() {
+    player.stop();
+  });
+
+  $('#buttonShoot').click(function() { player.shoot() });
 });
