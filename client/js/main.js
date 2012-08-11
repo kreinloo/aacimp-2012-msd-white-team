@@ -186,7 +186,7 @@ $(function () {
   .bind('mousedown touchstart', function() {
      function shooting() {
          player.shoot();
-         shootingId = setTimeout(shooting, 0);
+         shootingId = setTimeout(shooting, 50);
      }
      shooting();
      return false;
