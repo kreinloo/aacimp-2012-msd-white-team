@@ -128,12 +128,14 @@ $(function () {
         break;
 
       default:
-        return false;
+        return;
     }
 
     // if tank does not move but changes direction, it should be repainted
     player.tank.needsRendering = true;
     player.tank.render();
+
+    return false;
 
   });
 
