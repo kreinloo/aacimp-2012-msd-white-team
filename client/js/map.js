@@ -7,9 +7,9 @@ function Map () {
 
 Map.prototype = {
   initialize: function () {
-    for (var i = 0; i < 36; i++) {
+    for (var i = 0; i < MAP.SIZE_Y; i++) {
       this.map[i] = [];
-      for (var j = 0; j < 60; j++) {
+      for (var j = 0; j < MAP.SIZE_X; j++) {
         this.map[i][j] = 0;
       }
     }
@@ -74,7 +74,7 @@ Map.prototype = {
 
   // debugging
   printMap: function () {
-    for (var i = 0; i < 36; i++) {
+    for (var i = 0; i < MAP.SIZE_Y; i++) {
       console.log(this.map[i]);
     }
   },
