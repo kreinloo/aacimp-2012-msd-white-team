@@ -149,7 +149,7 @@ $(function () {
 
   });
 
-  var accActivationLevel = 15;
+  var accActivationLevel = 8;
 
   $(window).bind('acc', function (e) {
       if (!$('#accelerometer').prop('checked')) return;
@@ -160,7 +160,7 @@ $(function () {
         : {acc: e.accY, actions: ['moveDown', 'moveUp']};
 
       if (Math.abs(e.accX) > accActivationLevel) {
-        var dir = params.acc > 0 ? 0 : 1;
+        var dir = params.acc > 0 ? 1 : 0;
         var action = params.actions[dir];
         player.stop();
         player[action]();
