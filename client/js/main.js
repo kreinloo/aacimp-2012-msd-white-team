@@ -182,7 +182,7 @@ $(function () {
 
   var shootingId = false;
 
-  $('.arrow')
+  $('#buttonShoot')
   .bind('mousedown touchstart', function() {
      function shooting() {
          player.shoot();
