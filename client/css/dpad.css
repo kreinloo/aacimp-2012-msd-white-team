@@ -1,6 +1,6 @@
 .arrow {
-    height: 20px;
-    width: 40px;
+    height: 25px;
+    width: 50px;
     background-image: url("../gfx/arrow.gif");
     background-repeat: no-repeat;
     background-size: cover;
@@ -8,13 +8,13 @@
 }
 
 #arrowUp, #arrowDown {
-    right: 40%;
+    right: 50px;
 }
 #arrowUp{
-    top: 68%;
+    bottom: 120px;
 }
 #arrowDown{
-    top: 80%;
+    bottom: 40px;
     transform: rotate(-180deg);
     -moz-transform: rotate(-180deg);
     -webkit-transform: rotate(-180deg);
@@ -23,10 +23,10 @@
 }
 
 #arrowLeft, #arrowRight {
-    top: 74%;
+    bottom: 80px;
 }
 #arrowRight{
-    right: 16%;
+    right: 10px;
     transform: rotate(-270deg);
     -moz-transform: rotate(-270deg);
     -webkit-transform: rotate(-270deg);
@@ -34,7 +34,7 @@
     -o-transform: rotate(-270deg);
 }
 #arrowLeft{
-    right: 64%;
+    right: 90px;
     transform: rotate(-90deg);
     -moz-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
@@ -42,7 +42,7 @@
     -o-transform: rotate(-90deg);
 }
 #buttonShoot{
-    height: 4%;
+    height: 30px;
     width: 90%;
     background-color: blue;
     position: absolute;
