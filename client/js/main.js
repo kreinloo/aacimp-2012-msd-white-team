@@ -152,14 +152,18 @@ $(function () {
   var accActivationLevel = 8, prevAccEvent = 0;
 
   $(window).bind('acc', function (e) {
-      console.log(Math.floor(e.accX) + ':' + Math.floor(e.accY));
-
       var time = Date.now();
       if (time - prevAccEvent < 500) {
           return;
       }
       prevAccEvent = time;
       if (!$('#accelerometer').prop('checked')) {
+          return;
+      }
+
+      var len = Math.sqrt(Math.pow(e.accX, 2) + Math.pow(e.accY, 2));
+      if (len > 100) {
+          player.shoot();
           return;
       }
 
