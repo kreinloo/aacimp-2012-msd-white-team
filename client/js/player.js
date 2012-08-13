@@ -4,13 +4,15 @@
 
 */
 
-function Player () {
-  this.tank = new Tank({x: 5, y: 5});
+function Player (tankId) {
+  this.tank = map.objects[tankId];
 }
 
 Player.prototype = {
   name: null,
-  tank: null
+  tank: null,
+  oldX: null,
+  oldY: null
 };
 
 Player.prototype.moveTank = function (direction) {
@@ -60,7 +62,7 @@ Player.prototype.stop = function () {
   this.tank.xVel = 0;
   this.tank.yVel = 0;
   this.tank.isMoving = false;
-}
+};
 
 Player.prototype.shoot = function () {
   this.tank.shoot();

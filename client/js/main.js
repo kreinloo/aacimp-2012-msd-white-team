@@ -5,96 +5,94 @@
 */
 
 var map;
-var player;
+var player = null;
+var socket;
 
 $(function () {
 
   map = new Map();
-  player = new Player();
+  socket = io.connect("http://127.0.0.1:8000");
 
-  map.addObject(player.tank);
-  map.addObject(new Tank({ x: 40, y: 10 }));
+  socket.on(MESSAGE.FULL_UPDATE, function (data) {
 
-  b5 = new Brick({
-    sizeX: 60,
-    sizeY: 1,
-    brickType: BRICK_TYPE.STONE_WALL,
-    isDestructible: false
-  });
-  b6 = new Brick({
-    sizeX: 60,
-    sizeY: 1,
-    y: 35,
-    brickType: BRICK_TYPE.STONE_WALL,
-    isDestructible: false
-  });
-  b7 = new Brick({
-    sizeX: 1,
-    sizeY: 34,
-    y: 1,
-    brickType: BRICK_TYPE.STONE_WALL,
-    isDestructible: false
-  });
-  b8 = new Brick({
-    sizeX: 1,
-    sizeY: 34,
-    y: 1,
-    x: 59,
-    brickType: BRICK_TYPE.STONE_WALL,
-    isDestructible: false
-  });
-  map.addObject(b5);
-  map.addObject(b6);
-  map.addObject(b7);
-  map.addObject(b8);
+    console.log("RECV: FULL_UPDATE");
 
-  var i, j, random, brick;
-  for (i = 0; i < 33; i += 3 ) {
-    for (j = 0; j < 57; j += 3) {
-      random = Math.floor(Math.random()*8);
-      switch (random) {
-        case 0:
-          brick = new Brick({
-            x: j,
-            y: i,
-            type: TYPE.FOREST,
-            isPenetrable: true,
-            isDestructible: false
-          });
-          map.addObject(brick);
-          break;
-        case 1:
-          brick = new Brick({
-            x: j,
-            y: i,
-            type: TYPE.WALL,
-            sizeX: Math.floor(Math.random() * 2) + 1,
-            sizeY: Math.floor(Math.random() * 2) + 1,
-            isDestructible: false
-          });
-          map.addObject(brick);
-          break;
-        case 2:
-          brick = new Brick({
-            x: j,
-            y: i,
-            type: TYPE.STONE,
-            sizeX: 1,
-            sizeY: 1
-          });
-          map.addObject(brick);
-          break;
-        default:
-          //nothing to add
-          break;
+    objects = JSON.parse(data);
+    var obj, objKey, objData;
+
+    for (objKey in objects) {
+      objData = objects[objKey];
+
+      if (objData.type === TYPE.TANK) {
+        obj = new Tank(objData);
+      }
+
+      else if (objData.type === TYPE.FOREST ||
+               objData.type === TYPE.WALL ||
+               objData.type === TYPE.STONE) {
+        obj = new Brick(objData);
+      }
+
+      else if (objData.type === TYPE.BULLET) {
+        obj = new Bullet(objData);
+      }
+
+      map.addObject(obj);
+    }
+  });
+
+  socket.on(MESSAGE.PLAYER_ID, function (data) {
+    console.log("RECV: PLAYER_ID");
+    player = new Player(data.id);
+  });
+
+  socket.on(MESSAGE.PARTIAL_UPDATE, function (data) {
+    console.log("RECV: PARTIAL_UPDATE");
+
+    var obj = null;
+    if (data.event === EVENT.MOVE) {
+      obj = map.objects[data.uid];
+      console.log(data);
+      if (obj) {
+        obj.x = data.x;
+        obj.y = data.y;
+        obj.direction = data.direction;
+        obj.needsRendering = true;
       }
     }
-  }
+
+    else if (data.event === EVENT.NEW_TANK) {
+      console.log(data.obj);
+      var objData = data.obj;
+      var tank = new Tank(objData);
+      map.addObject(tank);
+    }
+
+  });
+
+
+  setTimeout(function () {
+    socket.emit(MESSAGE.FULL_UPDATE);
+  }, 500);
 
   setInterval(function () {
     map.updateObjects();
     map.renderScene();
+
+    if (player && (player.oldX !== player.tank.x || player.oldY !== player.tank.y)) {
+      socket.emit(MESSAGE.PARTIAL_UPDATE, {
+        event: EVENT.MOVE,
+        uid: player.tank.uid,
+        x: player.tank.x,
+        y: player.tank.y,
+        direction: player.tank.direction
+      });
+      player.oldX = player.tank.x;
+      player.oldY = player.tank.y;
+    }
+
   }, 100);
+
 
   setInterval(function () {
     map.updateBullets();
@@ -105,23 +103,23 @@ $(function () {
 
     switch (e.keyCode) {
       case 38:
-        player.moveUp();
+        if (player) player.moveUp();
         break;
 
       case 40:
-        player.moveDown();
+        if (player) player.moveDown();
         break;
 
       case 37:
-        player.moveLeft();
+        if (player) player.moveLeft();
         break;
 
       case 39:
-        player.moveRight();
+        if (player) player.moveRight();
         break;
 
       case 32:
-        player.shoot();
+        if (player) player.shoot();
         break;
 
       default:
@@ -143,7 +141,7 @@ $(function () {
       case 40:
       case 37:
       case 39:
-        player.stop();
+        if (player) player.stop();
         return false;
     }
 
@@ -167,7 +165,7 @@ $(function () {
         ? {acc: e.accX, actions: ['moveLeft', 'moveRight']}
         : {acc: e.accY, actions: ['moveDown', 'moveUp']};
 
-      player.stop();
+      if (player) player.stop();
       if (Math.abs(params.acc) < accActivationLevel) {
           return;
       }
@@ -202,4 +200,5 @@ $(function () {
     clearTimeout(shootingId);
     return false;
   });
+
 });
