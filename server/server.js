@@ -19,8 +19,11 @@ var MESSAGE = COMMON.MESSAGE;
 var MAP = COMMON.MAP;
 var EVENT = COMMON.EVENT;
 
+var clients = {};
+
 function Server () {
   this.map = new Map();
+  this.map.initialize();
   this.initialize();
 }
 
@@ -138,10 +141,6 @@ Server.prototype.fullUpdateRequest = function (socket) {
 
   socket.emit(MESSAGE.FULL_UPDATE, JSON.stringify(objs));
 
-  socket.emit(MESSAGE.PLAYER_ID, {
-    id: playerID
-  });
-
   // new tank!
 
   var playerTank = this.map.objects[playerID];
@@ -168,6 +167,12 @@ Server.prototype.fullUpdateRequest = function (socket) {
     }
   });
 
+  socket.emit(MESSAGE.PLAYER_ID, {
+    id: playerID
+  });
+
+  clients[socket.id] = playerID;
+
 }
 
 Server.prototype.partialUpdate = function (socket, data) {
@@ -176,18 +181,46 @@ Server.prototype.partialUpdate = function (socket, data) {
 
   var obj;
   if (data.event === EVENT.MOVE) {
-
     obj = this.map.objects[data.uid];
     obj.x = data.x;
     obj.y = data.y;
     obj.direction = data.direction;
-
+    socket.broadcast.emit(MESSAGE.PARTIAL_UPDATE, data);
   }
-  socket.broadcast.emit(MESSAGE.PARTIAL_UPDATE, data);
+
+  if (data.event == EVENT.SHOT) {
+    var tank = this.map.objects[data.tankId];
+    if (!tank) { console.log("THIS SHOULD NEVER HAPPEN!"); return; }
+    var bullet = new Bullet (tank);
+    bullet.direction = data.direction;
+    this.map.addObject(bullet);
+
+    data.uid = bullet.uid;
+
+    socket.broadcast.emit(MESSAGE.PARTIAL_UPDATE, data);
+    socket.emit(MESSAGE.PARTIAL_UPDATE, data);
+  }
 
 };
 
-var server = new Server();
+Server.prototype.disconnectHandler = function (socket) {
+
+  console.log("RECV: DISCONNECT HANDLER");
+  var tank = this.map.objects[clients[socket.id]];
+
+  this.map.removeObject(tank);
+
+  socket.broadcast.emit(MESSAGE.PARTIAL_UPDATE, {
+    event: EVENT.DESTROY_TANK,
+    uid: tank.uid
+  });
+
+  delete clients[socket.id];
+
+};
+
+server = new Server();
+map = server.map;
 
 io.sockets.on("connection", function (socket) {
 
@@ -207,8 +240,15 @@ io.sockets.on("connection", function (socket) {
   });
 
   socket.on("disconnect", function (data) {
-    socket.broadcast.emit(MESSAGE.DISCONNECT, data);
+    server.disconnectHandler(socket);
   });
 
-
 });
+
+setInterval(function () {
+  server.map.updateObjects();
+}, 100);
+
+setInterval(function () {
+  server.map.updateBullets();
+}, 30);

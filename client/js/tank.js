@@ -24,13 +24,8 @@ Tank.prototype = new GameObject({
 
   isDestructible: true,
 
-  moveTo: function (x, y) {
-    this.x = x;
-    this.y = y;
-  },
-
   shoot: function () {
-    var bullet = new Bullet (this);
+    var bullet = new Bullet(this);
     map.addObject(bullet);
   }
 });

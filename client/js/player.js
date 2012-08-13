@@ -65,5 +65,10 @@ Player.prototype.stop = function () {
 };
 
 Player.prototype.shoot = function () {
-  this.tank.shoot();
+  //this.tank.shoot();
+  socket.emit(MESSAGE.PARTIAL_UPDATE, {
+    event: EVENT.SHOT,
+    tankId: this.tank.uid,
+    direction: this.tank.direction
+  });
 };

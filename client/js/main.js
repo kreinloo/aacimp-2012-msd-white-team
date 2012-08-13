@@ -11,6 +11,32 @@ var socket;
 $(function () {
 
   map = new Map();
+  map.isServer = false;
+  map.initialize();
+
+  setInterval(function () {
+    map.updateBullets();
+    map.renderScene();
+  }, 30);
+
+  setInterval(function () {
+    map.updateObjects();
+    map.renderScene();
+
+    if (player && (player.oldX !== player.tank.x || player.oldY !== player.tank.y)) {
+      socket.emit(MESSAGE.PARTIAL_UPDATE, {
+        event: EVENT.MOVE,
+        uid: player.tank.uid,
+        x: player.tank.x,
+        y: player.tank.y,
+        direction: player.tank.direction
+      });
+      player.oldX = player.tank.x;
+      player.oldY = player.tank.y;
+    }
+
+  }, 100);
+
   socket = io.connect("http://127.0.0.1:8000");
 
   socket.on(MESSAGE.FULL_UPDATE, function (data) {
@@ -37,22 +63,24 @@ $(function () {
         obj = new Bullet(objData);
       }
 
-      map.addObject(obj);
+      var res;
+      res = map.addObject(obj);
+      console.log("added obj: " + res);
     }
   });
 
   socket.on(MESSAGE.PLAYER_ID, function (data) {
-    console.log("RECV: PLAYER_ID");
+    console.log("RECV: PLAYER_ID: " + data.id);
     player = new Player(data.id);
   });
 
   socket.on(MESSAGE.PARTIAL_UPDATE, function (data) {
+
     console.log("RECV: PARTIAL_UPDATE");
 
     var obj = null;
     if (data.event === EVENT.MOVE) {
       obj = map.objects[data.uid];
-      console.log(data);
       if (obj) {
         obj.x = data.x;
         obj.y = data.y;
@@ -62,42 +90,30 @@ $(function () {
     }
 
     else if (data.event === EVENT.NEW_TANK) {
-      console.log(data.obj);
       var objData = data.obj;
       var tank = new Tank(objData);
       map.addObject(tank);
     }
 
-  });
+    else if (data.event === EVENT.DESTROY_TANK) {
+      var tank = map.objects[data.uid];
+      tank.destroy();
+    }
 
+    else if (data.event === EVENT.SHOT) {
+      var tank = map.objects[data.tankId];
+      if (!tank) { console.log("THIS SHOULD NEVER HAPPEN!"); return; }
+      var bullet = new Bullet (tank);
+      bullet.direction = data.direction;
+      bullet.uid = data.uid;
+      console.log(map.addObject(bullet));
+    }
+
+  });
 
   setTimeout(function () {
     socket.emit(MESSAGE.FULL_UPDATE);
   }, 500);
-
-  setInterval(function () {
-    map.updateObjects();
-    map.renderScene();
-
-    if (player && (player.oldX !== player.tank.x || player.oldY !== player.tank.y)) {
-      socket.emit(MESSAGE.PARTIAL_UPDATE, {
-        event: EVENT.MOVE,
-        uid: player.tank.uid,
-        x: player.tank.x,
-        y: player.tank.y,
-        direction: player.tank.direction
-      });
-      player.oldX = player.tank.x;
-      player.oldY = player.tank.y;
-    }
-
-  }, 100);
-
-
-  setInterval(function () {
-    map.updateBullets();
-    map.renderScene();
-  }, 30);
 
   $(document).keydown(function (e) {
 
@@ -127,15 +143,16 @@ $(function () {
     }
 
     // if tank does not move but changes direction, it should be repainted
-    player.tank.needsRendering = true;
-    player.tank.render();
+    if (player) {
+      player.tank.needsRendering = true;
+      player.tank.render();
+    }
 
     return false;
 
   });
 
   $(document).keyup(function (e) {
-
     switch (e.keyCode) {
       case 38:
       case 40:
@@ -144,7 +161,6 @@ $(function () {
         if (player) player.stop();
         return false;
     }
-
   });
 
   var accActivationLevel = 8, prevAccEvent = 0;

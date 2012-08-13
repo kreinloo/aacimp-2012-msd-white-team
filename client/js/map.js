@@ -11,6 +11,7 @@ function Map () {
   this.domElement = $("#map");
   this.map = [];
   this.initialize();
+  this.isServer = true;
 }
 
 Map.prototype = {
@@ -28,7 +29,8 @@ Map.prototype = {
     for (var objKey in this.objects) {
       if (this.objects[objKey].type === TYPE.BULLET) { continue; }
       collision = this.objects[objKey].update();
-      if (collision) {}
+      if (collision) {
+      }
     }
   },
 
@@ -37,10 +39,14 @@ Map.prototype = {
     for (var objKey in this.objects) {
       if (this.objects[objKey].type !== TYPE.BULLET) { continue; }
       collision = this.objects[objKey].update();
+
       if (collision) {
         this.handleBulletCollision(collision);
         var bullet = this.objects[collision[0]];
         bullet.destroy();
+        if (this.isServer) {
+          console.log("Bullet destroyed!");
+        }
       }
     }
   },

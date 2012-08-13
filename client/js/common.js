@@ -28,10 +28,11 @@ var DIRECTION = {
 };
 
 var EVENT = {
-  MOVE          : 0x000401,
-  SHOT          : 0x000402,
-  SCORE         : 0x000403,
-  NEW_TANK      : 0x000404
+  MOVE          : "EVENT_MOVE",
+  SHOT          : "EVENT_SHOT",
+  SCORE         : "EVENT_SCORE",
+  NEW_TANK      : "NEW_TANK",
+  DESTROY_TANK  : "DESTROY_TANK"
 };
 
 var TYPE = {

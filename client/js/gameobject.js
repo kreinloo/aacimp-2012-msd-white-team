@@ -12,7 +12,7 @@ if (typeof exports != "undefined") {
 }
 
 function GameObject (options) {
-  this.uid = GameObject.AUTO_INCREMENT++;
+  if (!options.uid) this.uid = GameObject.AUTO_INCREMENT++;
   $.extend(this, options);
 
   this.domElement = $("<div />").addClass('gameobject').addClass(this.type).css({
