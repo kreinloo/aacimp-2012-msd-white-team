@@ -84,13 +84,7 @@ $(function () {
     var tank, bullet;
     if (data.event === EVENT.MOVE) {
       console.log("RECV: MOVE");
-      obj = map.objects[data.uid];
-      if (obj) {
-        obj.x = data.x;
-        obj.y = data.y;
-        obj.direction = data.direction;
-        obj.needsRendering = true;
-      }
+      map.updateObjectPosition(data);
     }
 
     else if (data.event === EVENT.NEW_TANK) {

@@ -5,6 +5,7 @@ if (typeof exports != "undefined") {
   var TYPE = COMMON.TYPE;
   var DIRECTION = COMMON.DIRECTION;
   var EVENT = COMMON.EVENT;
+  var MESSAGE = COMMON.MESSAGE;
 }
 
 function Map () {
@@ -100,7 +101,7 @@ Map.prototype = {
     if (object.uid === bullet.tankId) { return; }
     var isDead = object.registerHit();
     if (isDead) {
-      server.emitUpdate({
+      server.emitUpdate(MESSAGE.PARTIAL_UPDATE, {
         event: EVENT.DESTROY_OBJECT,
         uid: object.uid,
         buid: bullet.uid
@@ -108,7 +109,7 @@ Map.prototype = {
     }
     else {
       if (object.isDestructible) {
-        server.emitUpdate({
+        server.emitUpdate(MESSAGE.PARTIAL_UPDATE, {
           event: EVENT.HP_UPDATE,
           uid: object.uid,
           hp: object.hp
@@ -134,6 +135,7 @@ Map.prototype = {
       }
     }
     obj.direction = data.direction;
+    obj.needsRendering = true;
   }
 
 };
