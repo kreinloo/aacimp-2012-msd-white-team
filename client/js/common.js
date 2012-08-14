@@ -16,7 +16,8 @@ var MESSAGE = {
   CONNECT       : 0x000201,
   DISCONNECT    : 0x000202,
   FULL_UPDATE   : 0x000203,
-  PARTIAL_UPDATE: 0x000204
+  PARTIAL_UPDATE: 0x000204,
+  PLAYER_ID     : 0x000205
 };
 
 var DIRECTION = {
@@ -27,9 +28,11 @@ var DIRECTION = {
 };
 
 var EVENT = {
-  MOVE          : 0x000401,
-  SHOT          : 0x000402,
-  SCORE         : 0x000403
+  MOVE          : "EVENT_MOVE",
+  SHOT          : "EVENT_SHOT",
+  SCORE         : "EVENT_SCORE",
+  NEW_TANK      : "NEW_TANK",
+  DESTROY_TANK  : "DESTROY_TANK"
 };
 
 var TYPE = {
@@ -46,3 +49,12 @@ var MAP = {
   SIZE_X        : 60,
   SIZE_Y        : 36
 };
+
+if (typeof exports != "undefined") {
+  module.exports.TYPE = TYPE;
+  module.exports.MAP = MAP;
+  module.exports.DIRECTION = DIRECTION;
+  module.exports.MESSAGE = MESSAGE;
+  module.exports.BRICK_TYPE = BRICK_TYPE;
+  module.exports.EVENT = EVENT;
+}

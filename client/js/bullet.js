@@ -4,6 +4,14 @@
 
 */
 
+if (typeof exports != "undefined") {
+  var GameObject = require("./gameobject.js").GameObject;
+  var COMMON = require("./common.js");
+  var TYPE = COMMON.TYPE;
+  var DIRECTION = COMMON.DIRECTION;
+}
+
+
 function Bullet (tank) {
 
   var x = tank.x,
@@ -53,3 +61,7 @@ Bullet.prototype = new GameObject({
   sizeX: 1,
   sizeY: 1
 });
+
+if (typeof exports != "undefined") {
+  module.exports = Bullet;
+}
