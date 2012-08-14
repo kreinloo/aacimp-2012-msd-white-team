@@ -6,6 +6,8 @@
 
 function Player (tankId) {
   this.tank = map.objects[tankId];
+  this.tank.domElement.removeClass("tank");
+  this.tank.domElement.addClass("tank-user");
 }
 
 Player.prototype = {
@@ -62,13 +64,32 @@ Player.prototype.stop = function () {
   this.tank.xVel = 0;
   this.tank.yVel = 0;
   this.tank.isMoving = false;
+  if (this.tank.x !== this.oldX || this.tank.y !== this.oldY) {
+    this.tank.x = this.oldX;
+    this.tank.y = this.oldY;
+    socket.emit(MESSAGE.PARTIAL_UPDATE, {
+      event: EVENT.MOVE,
+      uid: this.tank.uid,
+      x: this.tank.x,
+      y: this.tank.y,
+      direction: this.tank.direction
+    });
+  }
 };
 
 Player.prototype.shoot = function () {
-  //this.tank.shoot();
+  socket.emit(MESSAGE.PARTIAL_UPDATE, {
+    event: EVENT.MOVE,
+    uid: this.tank.uid,
+    x: this.tank.x,
+    y: this.tank.y,
+    direction: this.tank.direction
+  });
   socket.emit(MESSAGE.PARTIAL_UPDATE, {
     event: EVENT.SHOT,
     tankId: this.tank.uid,
-    direction: this.tank.direction
+    direction: this.tank.direction,
+    x: this.tank.x,
+    y: this.tank.y
   });
 };

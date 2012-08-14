@@ -19,6 +19,12 @@
     background-image: url("../gfx/tank.png");
     background-size: 30px;
 }
+
+.tank-user {
+	background-image: url("../gfx/tank-user.png");
+	background-size: 30px;
+}
+
 .bullet {
 	background-image: url("../gfx/bullet.png");
 	transition: all 30ms linear;
