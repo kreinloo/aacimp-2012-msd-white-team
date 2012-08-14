@@ -1,8 +1,17 @@
+if (typeof exports != "undefined") {
+  var $ = require("jquery");
+  var COMMON = require("./common.js");
+  var MAP = COMMON.MAP;
+  var TYPE = COMMON.TYPE;
+  var DIRECTION = COMMON.DIRECTION;
+}
+
 function Map () {
   this.objects = {};
   this.domElement = $("#map");
   this.map = [];
   this.initialize();
+  this.isServer = true;
 }
 
 Map.prototype = {
@@ -20,7 +29,8 @@ Map.prototype = {
     for (var objKey in this.objects) {
       if (this.objects[objKey].type === TYPE.BULLET) { continue; }
       collision = this.objects[objKey].update();
-      if (collision) {}
+      if (collision) {
+      }
     }
   },
 
@@ -29,10 +39,14 @@ Map.prototype = {
     for (var objKey in this.objects) {
       if (this.objects[objKey].type !== TYPE.BULLET) { continue; }
       collision = this.objects[objKey].update();
+
       if (collision) {
         this.handleBulletCollision(collision);
         var bullet = this.objects[collision[0]];
         bullet.destroy();
+        if (this.isServer) {
+          console.log("Bullet destroyed!");
+        }
       }
     }
   },
@@ -49,7 +63,7 @@ Map.prototype = {
       for (i = 0; i < obj.sizeY; i++) {
         for (j = 0; j < obj.sizeX; j++) {
           if (this.map[obj.y + i][obj.x + j] !== 0) {
-            return;
+            return null;
           }
         }
       }
@@ -61,6 +75,7 @@ Map.prototype = {
         this.map[obj.y + i][obj.x + j] = obj.uid;
       }
     }
+    return obj.uid;
   },
 
   removeObject: function (obj) {
@@ -88,3 +103,7 @@ Map.prototype = {
   }
 
 };
+
+if (typeof exports != "undefined") {
+  module.exports = Map;
+}

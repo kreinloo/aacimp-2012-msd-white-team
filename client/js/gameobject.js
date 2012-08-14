@@ -4,8 +4,15 @@
 
 */
 
+if (typeof exports != "undefined") {
+  var COMMON = require("./common.js");
+  var TYPE = COMMON.TYPE;
+  var DIRECTION = COMMON.DIRECTION;
+  var $ = require("jquery");
+}
+
 function GameObject (options) {
-  this.uid = GameObject.AUTO_INCREMENT++;
+  if (!options.uid) this.uid = GameObject.AUTO_INCREMENT++;
   $.extend(this, options);
 
   this.domElement = $("<div />").addClass('gameobject').addClass(this.type).css({
@@ -134,3 +141,7 @@ GameObject.prototype = {
 };
 
 GameObject.AUTO_INCREMENT = 0;
+
+if (typeof exports != "undefined") {
+  module.exports.GameObject = GameObject;
+}
