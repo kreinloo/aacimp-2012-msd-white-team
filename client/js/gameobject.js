@@ -69,9 +69,8 @@ GameObject.prototype = {
         var ty = this.y + j;
         var tx = this.x + i;
         if (ty < 0 || tx < 0 || ty >= 36 || tx >= 60) {
-          console.log("this should be destroyed by now");
-          console.log(this.type);
-          console.log("x: " + this.x + " y: " + this.y);
+          this.destroy();
+          return null;
         }
         if (map.map[this.y + j][this.x + i] !== undefined &&
             map.map[this.y + j][this.x + i] !== 0 &&
