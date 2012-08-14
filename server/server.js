@@ -306,4 +306,4 @@ setInterval(function () {
     msg = server.messageQueue.pop();
     server.emitUpdate(msg.msg, msg.data);
   }
-}, 100);
+}, 50);
