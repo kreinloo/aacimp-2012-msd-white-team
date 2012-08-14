@@ -66,7 +66,13 @@ GameObject.prototype = {
     var i, j;
     for (j = 0; j < this.sizeY; j++) {
       for (i = 0; i < this.sizeX; i++) {
-        if (map.map[this.y + j][this.x + i] !== 0 &&
+        var ty = this.y + j;
+        var tx = this.x + i;
+        if (ty < 0 || tx < 0 || ty >= 36 || tx >= 60) {
+          console.log("this should be destroyed by now");
+        }
+        if (map.map[this.y + j][this.x + i] !== undefined &&
+            map.map[this.y + j][this.x + i] !== 0 &&
             map.map[this.y + j][this.x + i] !== this.uid &&
             !map.objects[map.map[this.y + j][this.x + i]].isPenetrable) {
           var objId = map.map[this.y + j][this.x + i];
@@ -134,7 +140,9 @@ GameObject.prototype = {
       this.hp--;
       if (this.hp <= 0) {
         this.destroy();
+        return true;
       }
+      return false;
     }
   }
 
