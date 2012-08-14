@@ -308,7 +308,7 @@ io.sockets.on("connection", function (socket) {
 
 setInterval(function () {
   server.map.updateObjects();
-}, 100);
+}, 125);
 
 setInterval(function () {
   server.map.updateBullets();
@@ -321,4 +321,4 @@ setInterval(function () {
     msg = server.messageQueue.pop();
     server.emitUpdate(msg.msg, msg.data);
   }
-}, 50);
+}, 75);

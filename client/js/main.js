@@ -35,7 +35,7 @@ $(function () {
       player.oldY = player.tank.y;
     }
 
-  }, 100);
+  }, 125);
 
   if (document.URL.split(":")[0] === "file") {
     socket = io.connect("http://127.0.0.1:8008");

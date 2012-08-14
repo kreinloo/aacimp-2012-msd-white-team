@@ -106,5 +106,5 @@ Player.prototype.shoot = function () {
 };
 
 Player.prototype.updateHealthbar = function () {
-  $("#hpBar").animate({"width": "-=66px"}, "slow");
+  $("#hpBar").animate({"width": "-=70px"}, "slow");
 };
