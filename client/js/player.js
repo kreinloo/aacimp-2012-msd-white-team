@@ -19,7 +19,8 @@ Player.prototype = {
   name: null,
   tank: null,
   oldX: null,
-  oldY: null
+  oldY: null,
+  lastShot: new Date().getTime()
 };
 
 Player.prototype.moveTank = function (direction) {
@@ -83,8 +84,12 @@ Player.prototype.stop = function () {
 };
 
 Player.prototype.shoot = function () {
-    sound = document.getElementById("shoot");
-    sound.play();
+
+  var d = new Date().getTime();
+  if (d - this.lastShot < 750) { return; }
+
+  sound = document.getElementById("shoot");
+  sound.play();
   socket.emit(MESSAGE.PARTIAL_UPDATE, {
     event: EVENT.MOVE,
     uid: this.tank.uid,
@@ -99,4 +104,5 @@ Player.prototype.shoot = function () {
     x: this.tank.x,
     y: this.tank.y
   });
+  this.lastShot = d;
 };

@@ -8,6 +8,21 @@
 */
 
 var io = require("socket.io").listen(8008);
+
+io.configure(function () {
+  io.set("log level", 0);
+  io.enable("browser client minification");
+  io.enable("browser client etag");
+  io.enable("browser client gzip");
+  io.set("transports", [
+    "websocket",
+    "flashsocket",
+    "htmlfile",
+    "xhr-polling",
+    "jsonp-polling"
+  ]);
+});
+
 var Map = require("../client/js/map.js");
 var Tank = require("../client/js/tank.js");
 var Bullet = require("../client/js/bullet.js");
