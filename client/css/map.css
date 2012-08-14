@@ -18,11 +18,13 @@
 .tank   {
     background-image: url("../gfx/tank.png");
     background-size: 30px;
+    z-index: 1;
 }
 
 .tank-user {
 	background-image: url("../gfx/tank-user.png");
 	background-size: 30px;
+	z-index: 1;
 }
 
 .bullet {
@@ -41,6 +43,7 @@
 .forest {
 	background-image: url("../gfx/forest.png");
 	background-size: 30px;
+	z-index: 2;
 }
 
 .wall {

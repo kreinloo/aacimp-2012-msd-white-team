@@ -26,6 +26,7 @@ function Server () {
   this.map.initialize();
   this.map.server = this;
   this.initialize();
+  this.messageQueue = [];
 }
 
 Server.prototype.initialize = function () {
@@ -185,7 +186,11 @@ Server.prototype.partialUpdate = function (socket, data) {
   var obj;
   if (data.event === EVENT.MOVE) {
     this.map.updateObjectPosition(data);
-    socket.broadcast.emit(MESSAGE.PARTIAL_UPDATE, data);
+
+    this.messageQueue.push({
+      msg: MESSAGE.PARTIAL_UPDATE,
+      data: data
+    });
   }
 
   if (data.event == EVENT.SHOT) {
@@ -256,8 +261,8 @@ Server.prototype.tankRequest = function (socket) {
 
 };
 
-Server.prototype.emitUpdate = function (msg) {
-  io.sockets.emit(MESSAGE.PARTIAL_UPDATE, msg);
+Server.prototype.emitUpdate = function (msg, data) {
+  io.sockets.emit(msg, data);
 };
 
 server = new Server();
@@ -293,3 +298,12 @@ setInterval(function () {
 setInterval(function () {
   server.map.updateBullets();
 }, 30);
+
+setInterval(function () {
+  var i, msg;
+  server.messageQueue.reverse();
+  while(server.messageQueue.length > 0) {
+    msg = server.messageQueue.pop();
+    server.emitUpdate(msg.msg, msg.data);
+  }
+}, 100);
