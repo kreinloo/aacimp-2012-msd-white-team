@@ -9,6 +9,7 @@
 
 var io = require("socket.io").listen(8008);
 
+/*
 io.configure(function () {
   io.set("log level", 0);
   io.enable("browser client minification");
@@ -22,6 +23,7 @@ io.configure(function () {
     "jsonp-polling"
   ]);
 });
+*/
 
 var Map = require("../client/js/map.js");
 var Tank = require("../client/js/tank.js");
@@ -119,7 +121,7 @@ Server.prototype.initialize = function () {
 
 Server.prototype.fullUpdateRequest = function (socket) {
 
-  console.log("full update for " + socket.id);
+  console.log("FULL_UPDATE" + socket.id);
 
   var playerID;
   while(true) {
@@ -223,7 +225,6 @@ Server.prototype.partialUpdate = function (socket, data) {
 };
 
 Server.prototype.disconnectHandler = function (socket) {
-
   console.log("RECV: DISCONNECT HANDLER");
   var tank = this.map.objects[clients[socket.id]];
   if (!tank) { return; }
@@ -233,7 +234,6 @@ Server.prototype.disconnectHandler = function (socket) {
     uid: tank.uid
   });
   delete clients[socket.id];
-
 };
 
 Server.prototype.tankRequest = function (socket) {
@@ -308,17 +308,15 @@ io.sockets.on("connection", function (socket) {
 
 setInterval(function () {
   server.map.updateObjects();
-}, 125);
+}, 150);
 
 setInterval(function () {
   server.map.updateBullets();
 }, 30);
 
 setInterval(function () {
-  var i, msg;
+  if (server.messageQueue.length === 0) { return; }
   server.messageQueue.reverse();
-  while(server.messageQueue.length > 0) {
-    msg = server.messageQueue.pop();
-    server.emitUpdate(msg.msg, msg.data);
-  }
+  server.emitUpdate(MESSAGE.UPDATES, server.messageQueue);
+  server.messageQueue = [];
 }, 75);

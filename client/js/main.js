@@ -8,89 +8,13 @@ var map;
 var player = null;
 var socket;
 
-$(function () {
-
-  map = new Map();
-  map.isServer = false;
-  map.initialize();
-
-  setInterval(function () {
-    map.updateBullets();
-    map.renderScene();
-  }, 30);
-
-  setInterval(function () {
-    map.updateObjects();
-    map.renderScene();
-
-    if (player && (player.oldX !== player.tank.x || player.oldY !== player.tank.y)) {
-      socket.emit(MESSAGE.PARTIAL_UPDATE, {
-        event: EVENT.MOVE,
-        uid: player.tank.uid,
-        x: player.tank.x,
-        y: player.tank.y,
-        direction: player.tank.direction
-      });
-      player.oldX = player.tank.x;
-      player.oldY = player.tank.y;
-    }
-
-  }, 125);
-
-  if (document.URL.split(":")[0] === "file") {
-    socket = io.connect("http://127.0.0.1:8008");
-  }
-  else {
-    socket = io.connect("http://ec2-46-137-36-39.eu-west-1.compute.amazonaws.com:8008");
-  }
-
-  socket.on(MESSAGE.FULL_UPDATE, function (data) {
-
-    //console.log("RECV: FULL_UPDATE");
-
-    objects = JSON.parse(data);
-    var obj, objKey, objData;
-
-    for (objKey in objects) {
-      objData = objects[objKey];
-
-      if (objData.type === TYPE.TANK) {
-        obj = new Tank(objData);
-      }
-
-      else if (objData.type === TYPE.FOREST ||
-               objData.type === TYPE.WALL ||
-               objData.type === TYPE.STONE) {
-        obj = new Brick(objData);
-      }
-
-      else if (objData.type === TYPE.BULLET) {
-        obj = new Bullet(objData);
-      }
-
-      var res;
-      res = map.addObject(obj);
-    }
-  });
-
-  socket.on(MESSAGE.PLAYER_ID, function (data) {
-    //console.log("RECV: PLAYER_ID: " + data.id);
-    player = new Player(data.id);
-  });
-
-  socket.on(MESSAGE.PARTIAL_UPDATE, function (data) {
+function partialUpdateHandler (data) {
 
     var obj = null;
     var tank, bullet;
     if (data.event === EVENT.MOVE) {
       //console.log("RECV: MOVE");
       if (player && data.uid === player.tank.uid) {
-        //console.log("x: " + player.tank.x +
-        //            " y: " + player.tank.y +
-        //            " dir: " + player.tank.direction);
-        //console.log("dx: " + data.x +
-        //            " dy: " + data.y +
-        //            " dir: " + data.direction);
         return;
       }
       map.updateObjectPosition(data);
@@ -110,9 +34,10 @@ $(function () {
       if (obj) { obj.destroy(); }
       if (bullet) { bullet.destroy(); }
       if (obj && obj === player.tank) {
-        socket.emit(MESSAGE.TANK_REQUEST);
-        player = null;
-        $("#hpBar").remove();
+        player.endGame();
+        setTimeout(function () {
+          socket.emit(MESSAGE.TANK_REQUEST);
+        }, 2000);
       }
     }
 
@@ -136,47 +61,117 @@ $(function () {
       }
     }
 
+};
+
+$(function () {
+
+  map = new Map();
+  map.isServer = false;
+  map.initialize();
+  player = new Player();
+
+  setInterval(function () {
+    map.updateBullets();
+    map.renderScene();
+  }, 30);
+
+  setInterval(function () {
+    map.updateObjects();
+    map.renderScene();
+
+    if (!player.isDead && (player.oldX !== player.tank.x ||
+                           player.oldY !== player.tank.y)) {
+      socket.emit(MESSAGE.PARTIAL_UPDATE, {
+        event: EVENT.MOVE,
+        uid: player.tank.uid,
+        x: player.tank.x,
+        y: player.tank.y,
+        direction: player.tank.direction
+      });
+      player.oldX = player.tank.x;
+      player.oldY = player.tank.y;
+    }
+
+  }, 150);
+
+  if (document.URL.split(":")[0] === "file") {
+    socket = io.connect("http://127.0.0.1:8008");
+  }
+  else {
+    socket = io.connect("http://ec2-46-137-36-39.eu-west-1.compute.amazonaws.com:8008");
+  }
+
+  socket.on(MESSAGE.FULL_UPDATE, function (data) {
+    //console.log("RECV: FULL_UPDATE");
+    objects = JSON.parse(data);
+    var obj, objKey, objData;
+
+    for (objKey in objects) {
+      objData = objects[objKey];
+
+      if (objData.type === TYPE.TANK) {
+        obj = new Tank(objData);
+      }
+
+      else if (objData.type === TYPE.FOREST ||
+               objData.type === TYPE.WALL ||
+               objData.type === TYPE.STONE) {
+        obj = new Brick(objData);
+      }
+
+      else if (objData.type === TYPE.BULLET) {
+        obj = new Bullet(objData);
+      }
+      map.addObject(obj);
+    }
+  });
+
+  socket.on(MESSAGE.PLAYER_ID, function (data) {
+    //console.log("RECV: PLAYER_ID: " + data.id);
+    player.startGame(data.id);
+  });
+
+  socket.on(MESSAGE.PARTIAL_UPDATE, function (data) {
+    partialUpdateHandler(data);
+  });
+
+  socket.on(MESSAGE.UPDATES, function (data) {
+    for (var i in data) {
+      partialUpdateHandler(data[i].data);
+    }
   });
 
   setTimeout(function () {
     socket.emit(MESSAGE.FULL_UPDATE);
-  }, 500);
+  }, 2000);
 
   $(document).keydown(function (e) {
-
     switch (e.keyCode) {
       case 38:
-        if (player) player.moveUp();
+        player.moveUp();
         break;
-
       case 40:
-        if (player) player.moveDown();
+        player.moveDown();
         break;
-
       case 37:
-        if (player) player.moveLeft();
+        player.moveLeft();
         break;
-
       case 39:
-        if (player) player.moveRight();
+        player.moveRight();
         break;
-
       case 32:
-        if (player) player.shoot();
+        player.shoot();
         break;
-
       default:
         return;
     }
 
     // if tank does not move but changes direction, it should be repainted
-    if (player) {
+    if (!player.isDead) {
       player.tank.needsRendering = true;
       player.tank.render();
     }
-
     return false;
-
   });
 
   $(document).keyup(function (e) {
@@ -185,7 +180,7 @@ $(function () {
       case 40:
       case 37:
       case 39:
-        if (player) player.stop();
+        player.stop();
         return false;
     }
   });

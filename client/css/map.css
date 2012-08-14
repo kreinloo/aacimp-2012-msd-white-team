@@ -8,11 +8,11 @@
 
 .gameobject {
 	position: absolute;
-	transition: all 125ms linear;
-	-moz-transition: all 125ms linear;
-	-webkit-transition: all 125ms linear;
-	-ms-transition: all 125ms linear;
-	-o-transition: all 125ms linear;
+	transition: all 150ms linear;
+	-moz-transition: all 150ms linear;
+	-webkit-transition: all 150ms linear;
+	-ms-transition: all 150ms linear;
+	-o-transition: all 150ms linear;
 }
 
 .tank   {
@@ -52,11 +52,11 @@
 }
 
 .hp-bar {
-	position: absolute;
-	width: 210px;
-	height: 30px;
-	left: 0px;
-	top: 330px;
+	position: fixed;
+	width: 25%;
+	height: 3%;
+	left: 0%;
+	bottom: 0%;
 	background-color: green;
 	opacity: 0.5;
 	z-index: 3;

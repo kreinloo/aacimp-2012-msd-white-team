@@ -4,12 +4,7 @@
 
 */
 
-function Player (tankId) {
-  this.tank = map.objects[tankId];
-  this.tank.domElement.removeClass("tank");
-  this.tank.domElement.addClass("tank-user");
-  this.hpBar = $("<div/>").addClass("hp-bar").attr("id", "hpBar");
-  map.domElement.append(this.hpBar);
+function Player () {
 }
 
 Player.prototype = {
@@ -17,12 +12,30 @@ Player.prototype = {
   tank: null,
   oldX: null,
   oldY: null,
-  hpBar: null,
-  lastShot: new Date().getTime()
+  hpBarLen: null,
+  lastShot: new Date().getTime(),
+  isDead: true,
+  points: 0,
+};
+
+Player.prototype.startGame = function (tankId) {
+  this.tank = map.objects[tankId];
+  this.tank.domElement.removeClass("tank");
+  this.tank.domElement.addClass("tank-user");
+  map.domElement.append(
+    $("<div/>").addClass("hp-bar").attr("id", "hpBar")
+  );
+  this.hpBarLen = parseInt($("#hpBar").css("width").split("px")[0]) / 3;
+  this.isDead = false;
+};
+
+Player.prototype.endGame = function () {
+  $("#hpBar").remove();
+  this.isDead = true;
 };
 
 Player.prototype.moveTank = function (direction) {
-  if (this.tank.isMoving) { return; }
+  if (this.isDead || this.tank.isMoving) { return; }
   switch (direction) {
     case DIRECTION.NORTH:
       this.tank.xVel = 0;
@@ -65,6 +78,7 @@ Player.prototype.moveRight = function () {
 };
 
 Player.prototype.stop = function () {
+  if (this.isDead) { return; }
   this.tank.xVel = 0;
   this.tank.yVel = 0;
   this.tank.isMoving = false;
@@ -106,5 +120,9 @@ Player.prototype.shoot = function () {
 };
 
 Player.prototype.updateHealthbar = function () {
-  $("#hpBar").animate({"width": "-=70px"}, "slow");
+  $("#hpBar").animate({ "width": "-=" + this.hpBarLen }, "slow");
 };
+
+Player.prototype.updatePoints = function () {
+  this.points++;
+}
