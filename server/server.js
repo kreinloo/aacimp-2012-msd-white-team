@@ -7,7 +7,7 @@
 
 */
 
-var io = require("socket.io").listen(8000);
+var io = require("socket.io").listen(8008);
 var Map = require("../client/js/map.js");
 var Tank = require("../client/js/tank.js");
 var Bullet = require("../client/js/bullet.js");
@@ -24,7 +24,9 @@ var clients = {};
 function Server () {
   this.map = new Map();
   this.map.initialize();
+  this.map.server = this;
   this.initialize();
+  this.messageQueue = [];
 }
 
 Server.prototype.initialize = function () {
@@ -75,7 +77,8 @@ Server.prototype.initialize = function () {
             type: TYPE.WALL,
             sizeX: Math.floor(Math.random() * 2) + 1,
             sizeY: Math.floor(Math.random() * 2) + 1,
-            isDestructible: false
+            isDestructible: false,
+            isPenetrable: false
           });
           this.map.addObject(brick);
           break;
@@ -85,7 +88,9 @@ Server.prototype.initialize = function () {
             y: i + Math.floor(Math.random() * 3),
             type: TYPE.STONE,
             sizeX: 1,
-            sizeY: 1
+            sizeY: 1,
+            isDestructible: true,
+            isPenetrable: false
           });
           this.map.addObject(brick);
           break;
@@ -95,7 +100,7 @@ Server.prototype.initialize = function () {
       }
     }
   }
-}
+};
 
 Server.prototype.fullUpdateRequest = function (socket) {
 
@@ -142,7 +147,6 @@ Server.prototype.fullUpdateRequest = function (socket) {
   socket.emit(MESSAGE.FULL_UPDATE, JSON.stringify(objs));
 
   // new tank!
-
   var playerTank = this.map.objects[playerID];
   socket.broadcast.emit(MESSAGE.PARTIAL_UPDATE, {
     event: EVENT.NEW_TANK,
@@ -173,7 +177,7 @@ Server.prototype.fullUpdateRequest = function (socket) {
 
   clients[socket.id] = playerID;
 
-}
+};
 
 Server.prototype.partialUpdate = function (socket, data) {
 
@@ -181,24 +185,24 @@ Server.prototype.partialUpdate = function (socket, data) {
 
   var obj;
   if (data.event === EVENT.MOVE) {
-    obj = this.map.objects[data.uid];
-    obj.x = data.x;
-    obj.y = data.y;
-    obj.direction = data.direction;
-    socket.broadcast.emit(MESSAGE.PARTIAL_UPDATE, data);
+    this.map.updateObjectPosition(data);
+
+    this.messageQueue.push({
+      msg: MESSAGE.PARTIAL_UPDATE,
+      data: data
+    });
   }
 
   if (data.event == EVENT.SHOT) {
     var tank = this.map.objects[data.tankId];
     if (!tank) { console.log("THIS SHOULD NEVER HAPPEN!"); return; }
+
     var bullet = new Bullet (tank);
     bullet.direction = data.direction;
     this.map.addObject(bullet);
+    data.bulletId = bullet.uid;
 
-    data.uid = bullet.uid;
-
-    socket.broadcast.emit(MESSAGE.PARTIAL_UPDATE, data);
-    socket.emit(MESSAGE.PARTIAL_UPDATE, data);
+    io.sockets.emit(MESSAGE.PARTIAL_UPDATE, data);
   }
 
 };
@@ -207,16 +211,58 @@ Server.prototype.disconnectHandler = function (socket) {
 
   console.log("RECV: DISCONNECT HANDLER");
   var tank = this.map.objects[clients[socket.id]];
-
+  if (!tank) { return; }
   this.map.removeObject(tank);
-
   socket.broadcast.emit(MESSAGE.PARTIAL_UPDATE, {
-    event: EVENT.DESTROY_TANK,
+    event: EVENT.DESTROY_OBJECT,
     uid: tank.uid
   });
-
   delete clients[socket.id];
 
+};
+
+Server.prototype.tankRequest = function (socket) {
+
+  var playerID;
+  while(true) {
+    playerID = this.map.addObject(new Tank ({
+      x: Math.floor(Math.random() * MAP.SIZE_X),
+      y: Math.floor(Math.random() * MAP.SIZE_Y)
+    }));
+    if (playerID !== null) break;
+  }
+
+  var tank = this.map.objects[playerID];
+  io.sockets.emit(MESSAGE.PARTIAL_UPDATE, {
+    event: EVENT.NEW_TANK,
+    obj: {
+      uid: tank.uid,
+      x: tank.x,
+      y: tank.y,
+      type: tank.type,
+      xVel: tank.xVel,
+      yVel: tank.yVel,
+      sizeX: tank.sizeX,
+      sizeY: tank.sizeY,
+      direction: tank.direction,
+      isMoving: tank.isMoving,
+      needsRendering: true,
+      isDestructible: tank.isDestructible,
+      isPenetrable: tank.isPenetrable,
+      hp: tank.hp,
+      tankId: tank.tankId
+    }
+  });
+
+  socket.emit(MESSAGE.PLAYER_ID, {
+    id: playerID
+  });
+  clients[socket.id] = playerID;
+
+};
+
+Server.prototype.emitUpdate = function (msg, data) {
+  io.sockets.emit(msg, data);
 };
 
 server = new Server();
@@ -235,8 +281,8 @@ io.sockets.on("connection", function (socket) {
     server.partialUpdate(socket, data);
   });
 
-  socket.on(MESSAGE.GAME_UPDATE, function (data) {
-    socket.broadcast.emit(MESSAGE.GAME_UPDATE, data);
+  socket.on(MESSAGE.TANK_REQUEST, function (data) {
+    server.tankRequest(socket);
   });
 
   socket.on("disconnect", function (data) {
@@ -252,3 +298,12 @@ setInterval(function () {
 setInterval(function () {
   server.map.updateBullets();
 }, 30);
+
+setInterval(function () {
+  var i, msg;
+  server.messageQueue.reverse();
+  while(server.messageQueue.length > 0) {
+    msg = server.messageQueue.pop();
+    server.emitUpdate(msg.msg, msg.data);
+  }
+}, 50);

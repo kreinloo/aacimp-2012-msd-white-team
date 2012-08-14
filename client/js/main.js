@@ -37,11 +37,16 @@ $(function () {
 
   }, 100);
 
-  socket = io.connect("http://127.0.0.1:8000");
+  if (document.URL.split(":")[0] === "file") {
+    socket = io.connect("http://127.0.0.1:8008");
+  }
+  else {
+    socket = io.connect("http://ec2-46-137-36-39.eu-west-1.compute.amazonaws.com:8008");
+  }
 
   socket.on(MESSAGE.FULL_UPDATE, function (data) {
 
-    console.log("RECV: FULL_UPDATE");
+    //console.log("RECV: FULL_UPDATE");
 
     objects = JSON.parse(data);
     var obj, objKey, objData;
@@ -65,48 +70,66 @@ $(function () {
 
       var res;
       res = map.addObject(obj);
-      console.log("added obj: " + res);
     }
   });
 
   socket.on(MESSAGE.PLAYER_ID, function (data) {
-    console.log("RECV: PLAYER_ID: " + data.id);
+    //console.log("RECV: PLAYER_ID: " + data.id);
     player = new Player(data.id);
   });
 
   socket.on(MESSAGE.PARTIAL_UPDATE, function (data) {
 
-    console.log("RECV: PARTIAL_UPDATE");
-
     var obj = null;
+    var tank, bullet;
     if (data.event === EVENT.MOVE) {
-      obj = map.objects[data.uid];
-      if (obj) {
-        obj.x = data.x;
-        obj.y = data.y;
-        obj.direction = data.direction;
-        obj.needsRendering = true;
+      //console.log("RECV: MOVE");
+      if (player && data.uid === player.tank.uid) {
+        //console.log("x: " + player.tank.x +
+        //            " y: " + player.tank.y +
+        //            " dir: " + player.tank.direction);
+        //console.log("dx: " + data.x +
+        //            " dy: " + data.y +
+        //            " dir: " + data.direction);
+        return;
       }
+      map.updateObjectPosition(data);
     }
 
     else if (data.event === EVENT.NEW_TANK) {
+      //console.log("RECV: NEW_TANK");
       var objData = data.obj;
-      var tank = new Tank(objData);
+      tank = new Tank(objData);
       map.addObject(tank);
     }
 
-    else if (data.event === EVENT.DESTROY_TANK) {
-      var tank = map.objects[data.uid];
-      tank.destroy();
+    else if (data.event === EVENT.DESTROY_OBJECT) {
+      //console.log("RECV: DESTROY_OBJECT");
+      obj = map.objects[data.uid];
+      bullet = map.objects[data.buid];
+      if (obj) { obj.destroy(); }
+      if (bullet) { bullet.destroy(); }
+      if (obj && obj === player.tank) {
+        socket.emit(MESSAGE.TANK_REQUEST);
+        player = null;
+      }
     }
 
     else if (data.event === EVENT.SHOT) {
-      var tank = map.objects[data.tankId];
-      if (!tank) { console.log("THIS SHOULD NEVER HAPPEN!"); return; }
-      var bullet = new Bullet (tank);
+      //console.log("RECV: SHOT");
+      tank = map.objects[data.tankId];
+      if (!tank) { return; }
+      bullet = new Bullet (tank);
       bullet.direction = data.direction;
-      bullet.uid = data.uid;
-      console.log(map.addObject(bullet));
+      bullet.uid = data.bulletId;
+      map.addObject(bullet);
+    }
+
+    else if (data.event === EVENT.HP_UPDATE) {
+      //console.log("RECV: HP_UPDATE");
+      obj = map.objects[data.uid];
+      if (!obj) { return; }
+      obj.hp = data.hp;
     }
 
   });

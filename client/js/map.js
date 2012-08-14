@@ -4,6 +4,8 @@ if (typeof exports != "undefined") {
   var MAP = COMMON.MAP;
   var TYPE = COMMON.TYPE;
   var DIRECTION = COMMON.DIRECTION;
+  var EVENT = COMMON.EVENT;
+  var MESSAGE = COMMON.MESSAGE;
 }
 
 function Map () {
@@ -12,6 +14,7 @@ function Map () {
   this.map = [];
   this.initialize();
   this.isServer = true;
+  this.server = null;
 }
 
 Map.prototype = {
@@ -29,8 +32,7 @@ Map.prototype = {
     for (var objKey in this.objects) {
       if (this.objects[objKey].type === TYPE.BULLET) { continue; }
       collision = this.objects[objKey].update();
-      if (collision) {
-      }
+      if (collision) {}
     }
   },
 
@@ -41,12 +43,11 @@ Map.prototype = {
       collision = this.objects[objKey].update();
 
       if (collision) {
-        this.handleBulletCollision(collision);
+        if (this.isServer) {
+          this.handleBulletCollision(collision);
+        }
         var bullet = this.objects[collision[0]];
         bullet.destroy();
-        if (this.isServer) {
-          console.log("Bullet destroyed!");
-        }
       }
     }
   },
@@ -79,19 +80,18 @@ Map.prototype = {
   },
 
   removeObject: function (obj) {
-    delete this.objects[obj.uid];
-    var i, j;
-    for (j = 0; j < obj.sizeY; j++) {
-      for (i = 0; i < obj.sizeX; i++) {
-        this.map[obj.y + j][obj.x + i] = 0;
+    try {
+      delete this.objects[obj.uid];
+      var i, j;
+      for (j = 0; j < obj.sizeY; j++) {
+        for (i = 0; i < obj.sizeX; i++) {
+          this.map[obj.y + j][obj.x + i] = 0;
+        }
       }
     }
-  },
-
-  // debugging
-  printMap: function () {
-    for (var i = 0; i < MAP.SIZE_Y; i++) {
-      console.log(this.map[i]);
+    catch (e) {
+      console.error("ERROR: No object found in hash table. May be it is " +
+        "removed.");
     }
   },
 
@@ -99,7 +99,43 @@ Map.prototype = {
     var bullet = this.objects[objIDs[0]];
     var object = this.objects[objIDs[1]];
     if (object.uid === bullet.tankId) { return; }
-    object.registerHit();
+    var isDead = object.registerHit();
+    if (isDead) {
+      server.emitUpdate(MESSAGE.PARTIAL_UPDATE, {
+        event: EVENT.DESTROY_OBJECT,
+        uid: object.uid,
+        buid: bullet.uid
+      });
+    }
+    else {
+      if (object.isDestructible) {
+        server.emitUpdate(MESSAGE.PARTIAL_UPDATE, {
+          event: EVENT.HP_UPDATE,
+          uid: object.uid,
+          hp: object.hp
+        });
+      }
+    }
+  },
+
+  updateObjectPosition: function (data) {
+    var obj = this.objects[data.uid];
+    if (!obj) { return; }
+    var i, j;
+    for (j = 0; j < obj.sizeY; j++) {
+      for (i = 0; i < obj.sizeX; i++) {
+        this.map[obj.y + j][obj.x + i] = 0;
+      }
+    }
+    obj.x = data.x;
+    obj.y = data.y;
+    for (j = 0; j < obj.sizeY; j++) {
+      for (i = 0; i < obj.sizeX; i++) {
+        this.map[obj.y + j][obj.x + i] = obj.uid;
+      }
+    }
+    obj.direction = data.direction;
+    obj.needsRendering = true;
   }
 
 };
