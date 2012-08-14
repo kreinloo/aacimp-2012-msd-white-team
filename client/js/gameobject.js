@@ -139,13 +139,21 @@ GameObject.prototype = {
   registerHit: function () {
     if (this.isDestructible) {
       this.hp--;
+      this.subtractHp(object);
       if (this.hp <= 0) {
         this.destroy();
         return true;
       }
       return false;
     }
-  }
+  },
+
+  subtractHp : function (object){
+    //idTank = map.map[object.y][object.x].uid;
+    var subtract = "#t" + object.tank.uid;
+    $(subtract).animate({"width": "-=33%"}, "slow");
+    return subtract;
+   }
 
 };
 

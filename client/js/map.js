@@ -99,7 +99,7 @@ Map.prototype = {
     var bullet = this.objects[objIDs[0]];
     var object = this.objects[objIDs[1]];
     if (object.uid === bullet.tankId) { return; }
-    var isDead = object.registerHit();
+    var isDead = object.registerHit(object);
     if (isDead) {
       server.emitUpdate(MESSAGE.PARTIAL_UPDATE, {
         event: EVENT.DESTROY_OBJECT,
