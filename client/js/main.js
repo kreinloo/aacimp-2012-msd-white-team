@@ -46,7 +46,7 @@ $(function () {
 
   socket.on(MESSAGE.FULL_UPDATE, function (data) {
 
-    console.log("RECV: FULL_UPDATE");
+    //console.log("RECV: FULL_UPDATE");
 
     objects = JSON.parse(data);
     var obj, objKey, objData;
@@ -74,7 +74,7 @@ $(function () {
   });
 
   socket.on(MESSAGE.PLAYER_ID, function (data) {
-    console.log("RECV: PLAYER_ID: " + data.id);
+    //console.log("RECV: PLAYER_ID: " + data.id);
     player = new Player(data.id);
   });
 
@@ -83,28 +83,28 @@ $(function () {
     var obj = null;
     var tank, bullet;
     if (data.event === EVENT.MOVE) {
-      console.log("RECV: MOVE");
+      //console.log("RECV: MOVE");
       if (player && data.uid === player.tank.uid) {
-        console.log("x: " + player.tank.x +
-                    " y: " + player.tank.y +
-                    " dir: " + player.tank.direction);
-        console.log("dx: " + data.x +
-                    " dy: " + data.y +
-                    " dir: " + data.direction);
+        //console.log("x: " + player.tank.x +
+        //            " y: " + player.tank.y +
+        //            " dir: " + player.tank.direction);
+        //console.log("dx: " + data.x +
+        //            " dy: " + data.y +
+        //            " dir: " + data.direction);
         return;
       }
       map.updateObjectPosition(data);
     }
 
     else if (data.event === EVENT.NEW_TANK) {
-      console.log("RECV: NEW_TANK");
+      //console.log("RECV: NEW_TANK");
       var objData = data.obj;
       tank = new Tank(objData);
       map.addObject(tank);
     }
 
     else if (data.event === EVENT.DESTROY_OBJECT) {
-      console.log("RECV: DESTROY_OBJECT");
+      //console.log("RECV: DESTROY_OBJECT");
       obj = map.objects[data.uid];
       bullet = map.objects[data.buid];
       if (obj) { obj.destroy(); }
@@ -116,9 +116,9 @@ $(function () {
     }
 
     else if (data.event === EVENT.SHOT) {
-      console.log("RECV: SHOT");
+      //console.log("RECV: SHOT");
       tank = map.objects[data.tankId];
-      if (!tank) { console.log("THIS SHOULD NEVER HAPPEN!"); return; }
+      if (!tank) { return; }
       bullet = new Bullet (tank);
       bullet.direction = data.direction;
       bullet.uid = data.bulletId;
@@ -126,7 +126,7 @@ $(function () {
     }
 
     else if (data.event === EVENT.HP_UPDATE) {
-      console.log("RECV: HP_UPDATE");
+      //console.log("RECV: HP_UPDATE");
       obj = map.objects[data.uid];
       if (!obj) { return; }
       obj.hp = data.hp;
