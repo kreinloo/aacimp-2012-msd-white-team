@@ -1,6 +1,10 @@
+#sidebar{
+    display: none;
+
+}
 .arrow {
-    height: 25px;
-    width: 50px;
+    height: 20%;
+    width: 20%;
     background-image: url("../gfx/arrow.gif");
     background-repeat: no-repeat;
     background-size: cover;
@@ -8,13 +12,14 @@
 }
 
 #arrowUp, #arrowDown {
-    right: 50px;
+    right: 10%;
+    left: 10%;
 }
 #arrowUp{
-    bottom: 120px;
+    top: 10%;
 }
 #arrowDown{
-    bottom: 40px;
+    bottom: 10%;
     transform: rotate(-180deg);
     -moz-transform: rotate(-180deg);
     -webkit-transform: rotate(-180deg);
@@ -23,10 +28,10 @@
 }
 
 #arrowLeft, #arrowRight {
-    bottom: 80px;
+    bottom: 0%;
 }
 #arrowRight{
-    right: 10px;
+    right: 0%;
     transform: rotate(-270deg);
     -moz-transform: rotate(-270deg);
     -webkit-transform: rotate(-270deg);
@@ -34,7 +39,7 @@
     -o-transform: rotate(-270deg);
 }
 #arrowLeft{
-    right: 90px;
+    right: 0%;
     transform: rotate(-90deg);
     -moz-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
