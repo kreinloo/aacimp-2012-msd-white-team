@@ -78,6 +78,8 @@ Player.prototype.stop = function () {
 };
 
 Player.prototype.shoot = function () {
+    sound = document.getElementById("shoot");
+    sound.play();
   socket.emit(MESSAGE.PARTIAL_UPDATE, {
     event: EVENT.MOVE,
     uid: this.tank.uid,
