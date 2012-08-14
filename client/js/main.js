@@ -112,6 +112,7 @@ $(function () {
       if (obj && obj === player.tank) {
         socket.emit(MESSAGE.TANK_REQUEST);
         player = null;
+        $("#hpBar").remove();
       }
     }
 
@@ -130,6 +131,9 @@ $(function () {
       obj = map.objects[data.uid];
       if (!obj) { return; }
       obj.hp = data.hp;
+      if (obj.uid === player.tank.uid) {
+        player.updateHealthbar();
+      }
     }
 
   });

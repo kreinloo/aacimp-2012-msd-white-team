@@ -8,11 +8,8 @@ function Player (tankId) {
   this.tank = map.objects[tankId];
   this.tank.domElement.removeClass("tank");
   this.tank.domElement.addClass("tank-user");
-    this.tank.domElement.append('<div id="t'+ tankId + '"></div>');
-    var style = document.createElement('style');
-    style.type = 'text/css';
-    style.innerHTML = '#t' + tankId + '{ position: absolute; background-color: green;    left : 0%;    width : 100%;    height : 10%;    top: 30; }';
-    document.getElementsByTagName('head')[0].appendChild(style);
+  this.hpBar = $("<div/>").addClass("hp-bar").attr("id", "hpBar");
+  map.domElement.append(this.hpBar);
 }
 
 Player.prototype = {
@@ -20,6 +17,7 @@ Player.prototype = {
   tank: null,
   oldX: null,
   oldY: null,
+  hpBar: null,
   lastShot: new Date().getTime()
 };
 
@@ -105,4 +103,8 @@ Player.prototype.shoot = function () {
     y: this.tank.y
   });
   this.lastShot = d;
+};
+
+Player.prototype.updateHealthbar = function () {
+  $("#hpBar").animate({"width": "-=66px"}, "slow");
 };

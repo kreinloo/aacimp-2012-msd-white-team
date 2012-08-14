@@ -50,3 +50,14 @@
 	background-image: url("../gfx/wall.png");
 	background-size: 10px;
 }
+
+.hp-bar {
+	position: absolute;
+	width: 200px;
+	height: 30px;
+	left: 0px;
+	top: 330px;
+	background-color: green;
+	-webkit-filter: opacity(50%);
+	z-index: 3;
+}
