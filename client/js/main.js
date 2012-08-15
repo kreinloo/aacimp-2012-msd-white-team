@@ -185,6 +185,33 @@ $(function () {
     }
   });
 
+  var upBtn = $("<div/>").
+    addClass("button up button1").
+    attr("id", "arrowUp").
+    attr("data-action", "moveUp");
+  $("#map").append(upBtn);
+
+  var downBtn = $("<div/>").
+    addClass("button down button1").
+    attr("id", "arrowDown").
+    attr("data-action", "moveDown");
+  $("#map").append(downBtn);
+
+  var leftBtn = $("<div/>").
+    addClass("button left button2").
+    attr("id", "arrowLeft").
+    attr("data-action", "moveLeft");
+  $("#map").append(leftBtn);
+
+  var rightBtn = $("<div/>").
+    addClass("button right button2").
+    attr("id", "arrowRight").
+    attr("data-action", "moveRight");
+  $("#map").append(rightBtn);
+
+  var shootBtn = $("<div/>").addClass("button3").attr("id", "shootBtn");
+  $("#map").append(shootBtn);
+
   var accActivationLevel = 8, prevAccEvent = 0;
 
   $(window).bind('acc', function (e) {
@@ -212,7 +239,7 @@ $(function () {
       player[action]();
   });
 
-  $('.arrow')
+  $('.button')
   .bind('mousedown touchstart', function() {
     var action = $(this).data('action');
     player[action]();
@@ -225,7 +252,7 @@ $(function () {
 
   var shootingId = false;
 
-  $('#buttonShoot')
+  $('#shootBtn')
   .bind('mousedown touchstart', function() {
      function shooting() {
          player.shoot();
