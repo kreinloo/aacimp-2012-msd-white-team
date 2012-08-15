@@ -49,20 +49,6 @@ GameObject.prototype = {
     this.x += this.xVel;
     this.y += this.yVel;
 
-    var x1, x2, y1, y2;
-    x1 = this.x;
-
-    if (this.sizeX > 1)
-      x2 = this.x + this.sizeX;
-    else
-      x2 = x1;
-    y1 = this.y;
-
-    if (this.sizeY > 1)
-      y2 = this.y + this.sizeY;
-    else
-      y2 = y1;
-
     var i, j;
     for (j = 0; j < this.sizeY; j++) {
       for (i = 0; i < this.sizeX; i++) {
@@ -95,9 +81,6 @@ GameObject.prototype = {
         map.map[this.y + j][this.x + i] = this.uid;
       }
     }
-
-    //console.log("x1: " + this.x + " x2: " + (this.x + 3) +
-    //  " y1: " + this.y + " y2: " + (this.y + 3));
 
     this.needsRendering = true;
     return null;

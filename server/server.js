@@ -72,7 +72,7 @@ Server.prototype.initialize = function () {
     x: 59,
     isDestructible: false
   }));
-
+/*
   var i, j, random, brick;
   for (i = 0; i < 33; i += 3 ) {
     for (j = 0; j < 57; j += 3) {
@@ -118,7 +118,7 @@ Server.prototype.initialize = function () {
       }
     }
   }
-
+*/
   var res, i, j;
   res = "";
   for (j = 0; j < 16; j++) {
@@ -138,9 +138,7 @@ Server.prototype.fullUpdateRequest = function (socket) {
   var obj;
   for (var objKey in this.map.objects) {
     obj = this.map.objects[objKey];
-
     objs.push({
-
       uid: obj.uid,
       x: obj.x,
       y: obj.y,
@@ -150,15 +148,12 @@ Server.prototype.fullUpdateRequest = function (socket) {
       sizeX: obj.sizeX,
       sizeY: obj.sizeY,
       direction: obj.direction,
-
       isMoving: obj.isMoving,
       needsRendering: true,
       isDestructible: obj.isDestructible,
       isPenetrable: obj.isPenetrable,
       hp: obj.hp,
-
       tankId: obj.tankId
-
     });
   }
 
@@ -170,8 +165,8 @@ Server.prototype.fullUpdateRequest = function (socket) {
   var playerID;
   var tank = new Tank ();
   while(true) {
-    tank.x = Math.floor(Math.random() * MAP.SIZE_X - 3);
-    tank.y = Math.floor(Math.random() * MAP.SIZE_Y - 3);
+    tank.x = Math.abs(Math.floor(Math.random() * MAP.SIZE_X - 3));
+    tank.y = Math.abs(Math.floor(Math.random() * MAP.SIZE_Y - 3));
     playerID = this.map.addObject(tank);
     if (playerID !== null) break;
   }
@@ -259,8 +254,8 @@ Server.prototype.tankRequest = function (socket) {
   var playerID;
   var tank = new Tank ();
   while(true) {
-    tank.x = Math.floor(Math.random() * MAP.SIZE_X - 3);
-    tank.y = Math.floor(Math.random() * MAP.SIZE_Y - 3);
+    tank.x = Math.abs(Math.floor(Math.random() * MAP.SIZE_X - 3));
+    tank.y = Math.abs(Math.floor(Math.random() * MAP.SIZE_Y - 3));
     playerID = this.map.addObject(tank);
     if (playerID !== null) break;
   }

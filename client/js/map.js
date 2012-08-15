@@ -61,17 +61,23 @@ Map.prototype = {
   addObject: function (obj) {
     var i, j;
     if (obj.type !== TYPE.BULLET) {
-      for (i = 0; i < obj.sizeY; i++) {
-        for (j = 0; j < obj.sizeX; j++) {
-          if (this.map[obj.y + i][obj.x + j] !== 0) {
+      for (j = 0; j < obj.sizeY; j++) {
+        for (i = 0; i < obj.sizeX; i++) {
+          var tx, ty;
+          ty = obj.y + j;
+          tx = obj.x + i;
+          if (tx < 0 || ty < 0 || tx >= 60 || ty >= 36) {
+            return null;
+          }
+          if (this.map[obj.y + j][obj.x + i] !== 0) {
             return null;
           }
         }
       }
     }
-    for (i = 0; i < obj.sizeY; i++) {
-      for (j = 0; j < obj.sizeX; j++) {
-        this.map[obj.y + i][obj.x + j] = obj.uid;
+    for (j = 0; j < obj.sizeY; j++) {
+      for (i = 0; i < obj.sizeX; i++) {
+        this.map[obj.y + j][obj.x + i] = obj.uid;
       }
     }
     this.objects[obj.uid] = obj;

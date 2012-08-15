@@ -77,7 +77,10 @@ $(function () {
   }, 30);
 
   setInterval(function () {
-    map.updateObjects();
+    //map.updateObjects();
+    if (!player.isDead) {
+      player.tank.update();
+    }
     map.renderScene();
 
     if (!player.isDead && (player.oldX !== player.tank.x ||
