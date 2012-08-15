@@ -134,15 +134,6 @@ Server.prototype.fullUpdateRequest = function (socket) {
   var self = this;
   console.log("FULL_UPDATE" + socket.id);
 
-  var playerID;
-  while(true) {
-    playerID = this.map.addObject(new Tank ({
-      x: Math.floor(Math.random() * MAP.SIZE_X),
-      y: Math.floor(Math.random() * MAP.SIZE_Y)
-    }));
-    if (playerID !== null) break;
-  }
-
   var objs = [];
   var obj;
   for (var objKey in this.map.objects) {
@@ -176,9 +167,18 @@ Server.prototype.fullUpdateRequest = function (socket) {
     data: objs
   });
 
+  var playerID;
+  var tank = new Tank ();
+  while(true) {
+    tank.x = Math.floor(Math.random() * MAP.SIZE_X);
+    tank.y = Math.floor(Math.random() * MAP.SIZE_Y);
+    playerID = this.map.addObject(tank);
+    if (playerID !== null) break;
+  }
+
   // new tank!
   var playerTank = this.map.objects[playerID];
-  socket.broadcast.emit(MESSAGE.PARTIAL_UPDATE, {
+  io.sockets.emit(MESSAGE.PARTIAL_UPDATE, {
     gid: self.gid,
     event: EVENT.NEW_TANK,
     obj: {
@@ -257,11 +257,11 @@ Server.prototype.disconnectHandler = function (socket) {
 Server.prototype.tankRequest = function (socket) {
 
   var playerID;
+  var tank = new Tank ();
   while(true) {
-    playerID = this.map.addObject(new Tank ({
-      x: Math.floor(Math.random() * MAP.SIZE_X),
-      y: Math.floor(Math.random() * MAP.SIZE_Y)
-    }));
+    tank.x = Math.floor(Math.random() * MAP.SIZE_X);
+    tank.y = Math.floor(Math.random() * MAP.SIZE_Y);
+    playerID = this.map.addObject(tank);
     if (playerID !== null) break;
   }
 
@@ -289,11 +289,13 @@ Server.prototype.tankRequest = function (socket) {
     }
   });
 
-  socket.emit(MESSAGE.PLAYER_ID, {
-    gid: self.gid,
-    id: playerID
-  });
-  clients[socket.id] = playerID;
+  setTimeout(function () {
+    socket.emit(MESSAGE.PLAYER_ID, {
+      gid: self.gid,
+      id: playerID
+    });
+    clients[socket.id] = playerID;
+  }, 500);
 
 };
 

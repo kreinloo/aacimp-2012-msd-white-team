@@ -69,13 +69,13 @@ Map.prototype = {
         }
       }
     }
-    this.objects[obj.uid] = obj;
-    this.domElement.append(obj.domElement);
     for (i = 0; i < obj.sizeY; i++) {
       for (j = 0; j < obj.sizeX; j++) {
         this.map[obj.y + i][obj.x + j] = obj.uid;
       }
     }
+    this.objects[obj.uid] = obj;
+    this.domElement.append(obj.domElement);
     return obj.uid;
   },
 
