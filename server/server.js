@@ -170,8 +170,8 @@ Server.prototype.fullUpdateRequest = function (socket) {
   var playerID;
   var tank = new Tank ();
   while(true) {
-    tank.x = Math.floor(Math.random() * MAP.SIZE_X);
-    tank.y = Math.floor(Math.random() * MAP.SIZE_Y);
+    tank.x = Math.floor(Math.random() * MAP.SIZE_X - 3);
+    tank.y = Math.floor(Math.random() * MAP.SIZE_Y - 3);
     playerID = this.map.addObject(tank);
     if (playerID !== null) break;
   }
@@ -259,8 +259,8 @@ Server.prototype.tankRequest = function (socket) {
   var playerID;
   var tank = new Tank ();
   while(true) {
-    tank.x = Math.floor(Math.random() * MAP.SIZE_X);
-    tank.y = Math.floor(Math.random() * MAP.SIZE_Y);
+    tank.x = Math.floor(Math.random() * MAP.SIZE_X - 3);
+    tank.y = Math.floor(Math.random() * MAP.SIZE_Y - 3);
     playerID = this.map.addObject(tank);
     if (playerID !== null) break;
   }
