@@ -202,10 +202,12 @@ Server.prototype.fullUpdateRequest = function (socket) {
     }
   });
 
-  socket.emit(MESSAGE.PLAYER_ID, {
-    gid: self.gid,
-    id: playerID
-  });
+  setTimeout(function () {
+    socket.emit(MESSAGE.PLAYER_ID, {
+      gid: self.gid,
+      id: playerID
+    });
+  }, 500);
 
   clients[socket.id] = playerID;
 

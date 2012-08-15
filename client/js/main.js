@@ -15,7 +15,7 @@ function partialUpdateHandler (data) {
 
     if (data.event === EVENT.MOVE) {
       if (DEBUG) console.log("RECV: MOVE");
-      if (data.uid === player.tank.uid) {
+      if (!player.isDead && data.uid === player.tank.uid) {
         return;
       }
       map.updateObjectPosition(data);
