@@ -7,28 +7,29 @@
 var map;
 var player = null;
 var socket;
+var DEBUG = true;
 
 function partialUpdateHandler (data) {
 
-    var obj = null;
-    var tank, bullet;
+    var obj, tank, bullet;
+
     if (data.event === EVENT.MOVE) {
-      //console.log("RECV: MOVE");
-      if (player && data.uid === player.tank.uid) {
+      if (DEBUG) console.log("RECV: MOVE");
+      if (data.uid === player.tank.uid) {
         return;
       }
       map.updateObjectPosition(data);
     }
 
     else if (data.event === EVENT.NEW_TANK) {
-      //console.log("RECV: NEW_TANK");
+      if (DEBUG) console.log("RECV: NEW_TANK");
       var objData = data.obj;
       tank = new Tank(objData);
       map.addObject(tank);
     }
 
     else if (data.event === EVENT.DESTROY_OBJECT) {
-      //console.log("RECV: DESTROY_OBJECT");
+      if (DEBUG) console.log("RECV: DESTROY_OBJECT");
       obj = map.objects[data.uid];
       bullet = map.objects[data.buid];
       if (obj) { obj.destroy(); }
@@ -36,13 +37,13 @@ function partialUpdateHandler (data) {
       if (obj && obj === player.tank) {
         player.endGame();
         setTimeout(function () {
-          socket.emit(MESSAGE.TANK_REQUEST);
+          socket.emit(MESSAGE.TANK_REQUEST, {gid: player.gid});
         }, 2000);
       }
     }
 
     else if (data.event === EVENT.SHOT) {
-      //console.log("RECV: SHOT");
+      if (DEBUG) console.log("RECV: SHOT");
       tank = map.objects[data.tankId];
       if (!tank) { return; }
       bullet = new Bullet (tank);
@@ -52,7 +53,7 @@ function partialUpdateHandler (data) {
     }
 
     else if (data.event === EVENT.HP_UPDATE) {
-      //console.log("RECV: HP_UPDATE");
+      if (DEBUG) console.log("RECV: HP_UPDATE");
       obj = map.objects[data.uid];
       if (!obj) { return; }
       obj.hp = data.hp;
@@ -82,6 +83,7 @@ $(function () {
     if (!player.isDead && (player.oldX !== player.tank.x ||
                            player.oldY !== player.tank.y)) {
       socket.emit(MESSAGE.PARTIAL_UPDATE, {
+        gid: player.gid,
         event: EVENT.MOVE,
         uid: player.tank.uid,
         x: player.tank.x,
@@ -102,8 +104,8 @@ $(function () {
   }
 
   socket.on(MESSAGE.FULL_UPDATE, function (data) {
-    //console.log("RECV: FULL_UPDATE");
-    objects = JSON.parse(data);
+    if (DEBUG) console.log("RECV: FULL_UPDATE");
+    objects = data.data;
     var obj, objKey, objData;
 
     for (objKey in objects) {
@@ -124,20 +126,24 @@ $(function () {
       }
       map.addObject(obj);
     }
+    player.gid = data.gid;
   });
 
   socket.on(MESSAGE.PLAYER_ID, function (data) {
-    //console.log("RECV: PLAYER_ID: " + data.id);
+    if (player.gid !== data.gid) { return; }
+    if (DEBUG) console.log("RECV: PLAYER_ID: " + data.id);
     player.startGame(data.id);
   });
 
   socket.on(MESSAGE.PARTIAL_UPDATE, function (data) {
+    if (player.gid !== data.gid) { return; }
     partialUpdateHandler(data);
   });
 
   socket.on(MESSAGE.UPDATES, function (data) {
-    for (var i in data) {
-      partialUpdateHandler(data[i].data);
+    if (player.gid !== data.gid) { return; }
+    for (var i in data.data) {
+      partialUpdateHandler(data.data[i].data);
     }
   });
 

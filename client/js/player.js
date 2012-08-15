@@ -16,6 +16,7 @@ Player.prototype = {
   lastShot: new Date().getTime(),
   isDead: true,
   points: 0,
+  gid: null
 };
 
 Player.prototype.startGame = function (tankId) {
@@ -78,6 +79,7 @@ Player.prototype.moveRight = function () {
 };
 
 Player.prototype.stop = function () {
+  var self = this;
   if (this.isDead) { return; }
   this.tank.xVel = 0;
   this.tank.yVel = 0;
@@ -86,6 +88,7 @@ Player.prototype.stop = function () {
     this.tank.x = this.oldX;
     this.tank.y = this.oldY;
     socket.emit(MESSAGE.PARTIAL_UPDATE, {
+      gid: self.gid,
       event: EVENT.MOVE,
       uid: this.tank.uid,
       x: this.tank.x,
@@ -97,12 +100,14 @@ Player.prototype.stop = function () {
 
 Player.prototype.shoot = function () {
 
+  var self = this;
   var d = new Date().getTime();
   if (d - this.lastShot < 750) { return; }
 
   sound = document.getElementById("shoot");
   sound.play();
   socket.emit(MESSAGE.PARTIAL_UPDATE, {
+    gid: self.gid,
     event: EVENT.MOVE,
     uid: this.tank.uid,
     x: this.tank.x,
@@ -110,6 +115,7 @@ Player.prototype.shoot = function () {
     direction: this.tank.direction
   });
   socket.emit(MESSAGE.PARTIAL_UPDATE, {
+    gid: self.gid,
     event: EVENT.SHOT,
     tankId: this.tank.uid,
     direction: this.tank.direction,
