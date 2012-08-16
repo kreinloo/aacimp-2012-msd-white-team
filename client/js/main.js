@@ -251,7 +251,7 @@ $(function () {
         player[action]();
       }
   });
-
+  */
   $('.button')
   .bind('mousedown touchstart', function() {
     var action = $(this).data('action');
@@ -284,6 +284,5 @@ $(function () {
     clearTimeout(shootingId);
     return false;
   });
-  */
 
 });

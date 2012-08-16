@@ -22,10 +22,13 @@ var io = require("socket.io").listen(8008);
 
 io.configure(function () {
   io.set("log level", 1);
+  io.set("heartbeat timeout", 15);
+  io.set("heartbeat interval", 10);
   /*
   io.enable("browser client minification");
   io.enable("browser client etag");
   io.enable("browser client gzip");
+  */
   io.set("transports", [
     "websocket",
     "flashsocket",
@@ -33,7 +36,6 @@ io.configure(function () {
     "xhr-polling",
     "jsonp-polling"
   ]);
-  */
 });
 
 var Map = require("../client/js/map.js");
