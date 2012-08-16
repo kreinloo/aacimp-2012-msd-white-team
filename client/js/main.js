@@ -62,7 +62,7 @@ function partialUpdateHandler (data) {
       }
     }
 
-};
+}
 
 $(function () {
 

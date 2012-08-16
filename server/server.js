@@ -22,8 +22,6 @@ var io = require("socket.io").listen(8008);
 
 io.configure(function () {
   io.set("log level", 1);
-  io.set("heartbeat timeout", 15);
-  io.set("heartbeat interval", 10);
   /*
   io.enable("browser client minification");
   io.enable("browser client etag");
@@ -36,7 +34,11 @@ io.configure(function () {
     "xhr-polling",
     "jsonp-polling"
   ]);
+  io.set("heartbeat timeout", 15);
+  io.set("heartbeat interval", 10);
 });
+
+io.listen(8008);
 
 var Map = require("../client/js/map.js");
 var Tank = require("../client/js/tank.js");
@@ -86,7 +88,7 @@ Server.prototype.initialize = function () {
     x: 59,
     isDestructible: false
   }));
-/*
+
   var i, j, random, brick;
   for (i = 0; i < 33; i += 6 ) {
     for (j = 0; j < 57; j += 6) {
@@ -132,8 +134,8 @@ Server.prototype.initialize = function () {
       }
     }
   }
-*/
-  var res, i, j;
+
+  var res;
   res = "";
   for (j = 0; j < 16; j++) {
     i = Math.floor(Math.random()*16).toString(16).toUpperCase();
@@ -251,7 +253,7 @@ Server.prototype.partialUpdate = function (socket, data) {
   var self = this;
   if (data.event === EVENT.MOVE) {
     var obj = this.map.objects[data.uid];
-    if (!obj || data.x < 0 || data.y < 0 || data.x >= 60 || data.x >= 36) {
+    if (!obj || data.x < 0 || data.y < 0 || data.x >= 60 || data.y >= 36) {
       if (DEBUG) {
         console.log("BAD DATA: " + socket.id);
         console.log(data);
@@ -300,7 +302,7 @@ Server.prototype.tankRequest = function (socket) {
     if (playerID !== null) break;
   }
 
-  var tank = this.map.objects[playerID];
+  tank = this.map.objects[playerID];
   var self = this;
   io.sockets.emit(MESSAGE.PARTIAL_UPDATE, {
     gid: self.gid,

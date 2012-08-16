@@ -132,4 +132,4 @@ Player.prototype.updateHealthbar = function () {
 
 Player.prototype.updatePoints = function () {
   this.points++;
-}
+};
