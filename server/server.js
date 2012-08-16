@@ -215,7 +215,7 @@ Server.prototype.fullUpdateRequest = function (socket) {
 
     if (DEBUG) {
       console.log("INITIAL TANK " + socket.id);
-      console.log(data);
+      console.log(msg);
     }
 
     io.sockets.emit(MESSAGE.PARTIAL_UPDATE, msg);

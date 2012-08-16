@@ -223,8 +223,8 @@ $(function () {
   var shootBtn = $("<div/>").addClass("button3").attr("id", "shootBtn");
   $("#map").append(shootBtn);
 
+  /*
   var accActivationLevel = 8, prevAccEvent = 0;
-
   $(window).bind('acc', function (e) {
       if (!$('#accelerometer').prop('checked')) {
           return;
@@ -284,5 +284,6 @@ $(function () {
     clearTimeout(shootingId);
     return false;
   });
+  */
 
 });
