@@ -190,7 +190,8 @@ Server.prototype.fullUpdateRequest = function (socket) {
     }
 
     var playerTank = self.map.objects[playerID];
-    io.sockets.emit(MESSAGE.PARTIAL_UPDATE, {
+
+    var msg = {
       gid: self.gid,
       event: EVENT.NEW_TANK,
       obj: {
@@ -210,13 +211,28 @@ Server.prototype.fullUpdateRequest = function (socket) {
         hp: playerTank.hp,
         tankId: playerTank.tankId
       }
-    });
+    };
+
+    if (DEBUG) {
+      console.log("INITIAL TANK " + socket.id);
+      console.log(data);
+    }
+
+    io.sockets.emit(MESSAGE.PARTIAL_UPDATE, msg);
 
     setTimeout(function () {
       socket.emit(MESSAGE.PLAYER_ID, {
         gid: self.gid,
         id: playerID
       });
+
+      if (DEBUG) {
+        console.log("PLAYER ID " + socket.id);
+        console.log({
+          gid: self.gid,
+          id: playerID
+        });
+      }
     }, 500);
 
     clients[socket.id] = playerID;
