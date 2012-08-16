@@ -7,11 +7,22 @@
 
 */
 
+var simplelogger = require("simplelogger").simplelogger;
+var logger = new simplelogger({
+  filename: "error.log",
+  autolog: ["file"]
+});
+
+process.addListener("uncaughtException", function (err) {
+  logger.error("Uncaught exception: " + err);
+  console.trace();
+});
+
 var io = require("socket.io").listen(8008);
 
-/*
 io.configure(function () {
-  io.set("log level", 0);
+  io.set("log level", 1);
+  /*
   io.enable("browser client minification");
   io.enable("browser client etag");
   io.enable("browser client gzip");
@@ -22,8 +33,8 @@ io.configure(function () {
     "xhr-polling",
     "jsonp-polling"
   ]);
+  */
 });
-*/
 
 var Map = require("../client/js/map.js");
 var Tank = require("../client/js/tank.js");
@@ -37,6 +48,7 @@ var MAP = COMMON.MAP;
 var EVENT = COMMON.EVENT;
 
 var clients = {};
+var DEBUG = true;
 
 function Server () {
   this.map = new Map();
@@ -132,7 +144,7 @@ Server.prototype.initialize = function () {
 Server.prototype.fullUpdateRequest = function (socket) {
 
   var self = this;
-  console.log("FULL_UPDATE" + socket.id);
+  console.log("FULL_UPDATE " + socket.id);
 
   var objs = [];
   var obj;
@@ -157,71 +169,76 @@ Server.prototype.fullUpdateRequest = function (socket) {
     });
   }
 
+  if (DEBUG) {
+    console.log("SENDING FULL UPDATE " + socket.id);
+    console.log(objs);
+  }
   socket.emit(MESSAGE.FULL_UPDATE, {
     gid: self.gid,
     data: objs
   });
 
-  var playerID;
-  var tank = new Tank ();
-  while(true) {
-    tank.x = Math.abs(Math.floor(Math.random() * MAP.SIZE_X - 3));
-    tank.y = Math.abs(Math.floor(Math.random() * MAP.SIZE_Y - 3));
-    playerID = this.map.addObject(tank);
-    if (playerID !== null) break;
-  }
-
-  // new tank!
-  var playerTank = this.map.objects[playerID];
-  io.sockets.emit(MESSAGE.PARTIAL_UPDATE, {
-    gid: self.gid,
-    event: EVENT.NEW_TANK,
-    obj: {
-      uid: playerTank.uid,
-      x: playerTank.x,
-      y: playerTank.y,
-      type: playerTank.type,
-      xVel: playerTank.xVel,
-      yVel: playerTank.yVel,
-      sizeX: playerTank.sizeX,
-      sizeY: playerTank.sizeY,
-      direction: playerTank.direction,
-
-      isMoving: playerTank.isMoving,
-      needsRendering: true,
-      isDestructible: playerTank.isDestructible,
-      isPenetrable: playerTank.isPenetrable,
-      hp: playerTank.hp,
-
-      tankId: playerTank.tankId
-    }
-  });
-
   setTimeout(function () {
-    socket.emit(MESSAGE.PLAYER_ID, {
-      gid: self.gid,
-      id: playerID
-    });
-  }, 500);
 
-  clients[socket.id] = playerID;
+    var playerID;
+    var tank = new Tank ();
+    while(true) {
+      tank.x = Math.abs(Math.floor(Math.random() * MAP.SIZE_X - 3));
+      tank.y = Math.abs(Math.floor(Math.random() * MAP.SIZE_Y - 3));
+      playerID = self.map.addObject(tank);
+      if (playerID !== null) break;
+    }
+
+    var playerTank = self.map.objects[playerID];
+    io.sockets.emit(MESSAGE.PARTIAL_UPDATE, {
+      gid: self.gid,
+      event: EVENT.NEW_TANK,
+      obj: {
+        uid: playerTank.uid,
+        x: playerTank.x,
+        y: playerTank.y,
+        type: playerTank.type,
+        xVel: playerTank.xVel,
+        yVel: playerTank.yVel,
+        sizeX: playerTank.sizeX,
+        sizeY: playerTank.sizeY,
+        direction: playerTank.direction,
+        isMoving: playerTank.isMoving,
+        needsRendering: true,
+        isDestructible: playerTank.isDestructible,
+        isPenetrable: playerTank.isPenetrable,
+        hp: playerTank.hp,
+        tankId: playerTank.tankId
+      }
+    });
+
+    setTimeout(function () {
+      socket.emit(MESSAGE.PLAYER_ID, {
+        gid: self.gid,
+        id: playerID
+      });
+    }, 500);
+
+    clients[socket.id] = playerID;
+
+  }, 1000);
 
 };
 
 Server.prototype.partialUpdate = function (socket, data) {
 
-  console.log("RECV: PARTIAL_UPDATE");
+  console.log("RECV: PARTIAL_UPDATE " + socket.id);
+  if (DEBUG) console.log(data);
 
-  var obj;
+  var self = this;
   if (data.event === EVENT.MOVE) {
+    var obj = this.map.objects[data.uid];
+    if (!obj) { return; }
     this.map.updateObjectPosition(data);
-    this.messageQueue.push({
-      msg: MESSAGE.PARTIAL_UPDATE,
-      data: data
-    });
+    socket.broadcast.emit(MESSAGE.PARTIAL_UPDATE, data);
   }
 
-  if (data.event == EVENT.SHOT) {
+  else if (data.event == EVENT.SHOT) {
     var tank = this.map.objects[data.tankId];
     if (!tank) { console.log("THIS SHOULD NEVER HAPPEN!"); return; }
 
@@ -229,14 +246,13 @@ Server.prototype.partialUpdate = function (socket, data) {
     bullet.direction = data.direction;
     this.map.addObject(bullet);
     data.bulletId = bullet.uid;
-
     io.sockets.emit(MESSAGE.PARTIAL_UPDATE, data);
   }
 
 };
 
 Server.prototype.disconnectHandler = function (socket) {
-  console.log("RECV: DISCONNECT HANDLER");
+  console.log("RECV: DISCONNECT HANDLER " + socket.id);
   var self = this;
   var tank = this.map.objects[clients[socket.id]];
   if (!tank) { return; }
@@ -296,6 +312,10 @@ Server.prototype.tankRequest = function (socket) {
 
 Server.prototype.emitUpdate = function (msg, data) {
   data.gid = this.gid;
+  if (DEBUG) {
+    console.log("BROADCAST: ");
+    console.log(data);
+  }
   io.sockets.emit(msg, data);
 };
 

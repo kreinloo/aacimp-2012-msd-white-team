@@ -84,7 +84,8 @@ $(function () {
     map.renderScene();
 
     if (!player.isDead && (player.oldX !== player.tank.x ||
-                           player.oldY !== player.tank.y)) {
+                           player.oldY !== player.tank.y ||
+                           player.oldDir !== player.tank.direction)) {
       socket.emit(MESSAGE.PARTIAL_UPDATE, {
         gid: player.gid,
         event: EVENT.MOVE,
@@ -95,6 +96,7 @@ $(function () {
       });
       player.oldX = player.tank.x;
       player.oldY = player.tank.y;
+      player.oldDir = player.tank.direction;
     }
 
   }, 150);

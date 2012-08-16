@@ -61,6 +61,7 @@ GameObject.prototype = {
         if (map.map[this.y + j][this.x + i] !== undefined &&
             map.map[this.y + j][this.x + i] !== 0 &&
             map.map[this.y + j][this.x + i] !== this.uid &&
+            map.objects[map.map[this.y + j][this.x + i]] !== undefined &&
             !map.objects[map.map[this.y + j][this.x + i]].isPenetrable) {
           var objId = map.map[this.y + j][this.x + i];
           this.x -= this.xVel;

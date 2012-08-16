@@ -12,6 +12,7 @@ Player.prototype = {
   tank: null,
   oldX: null,
   oldY: null,
+  oldDir: null,
   hpBarLen: null,
   lastShot: new Date().getTime(),
   isDead: true,
