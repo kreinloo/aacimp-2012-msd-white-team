@@ -233,7 +233,13 @@ Server.prototype.partialUpdate = function (socket, data) {
   var self = this;
   if (data.event === EVENT.MOVE) {
     var obj = this.map.objects[data.uid];
-    if (!obj) { return; }
+    if (!obj || data.x < 0 || data.y < 0 || data.x >= 60 || data.x >= 36) {
+      if (DEBUG) {
+        console.log("BAD DATA: " + socket.id);
+        console.log(data);
+      }
+      return;
+    }
     this.map.updateObjectPosition(data);
     socket.broadcast.emit(MESSAGE.PARTIAL_UPDATE, data);
   }
