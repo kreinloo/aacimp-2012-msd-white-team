@@ -241,23 +241,29 @@ $(function () {
         ? {acc: e.accX, actions: ['moveLeft', 'moveRight']}
         : {acc: e.accY, actions: ['moveDown', 'moveUp']};
 
-      if (player) player.stop();
+      if (!player.isDead) player.stop();
       if (Math.abs(params.acc) < accActivationLevel) {
           return;
       }
       var dir = params.acc > 0 ? 1 : 0;
       var action = params.actions[dir];
-      player[action]();
+      if (!player.isDead) {
+        player[action]();
+      }
   });
 
   $('.button')
   .bind('mousedown touchstart', function() {
     var action = $(this).data('action');
-    player[action]();
+    if (!player.isDead) {
+      player[action]();
+    }
     return false;
   })
   .bind('mouseup touchend', function() {
-    player.stop();
+    if (!player.isDead) {
+      player.stop();
+    }
     return false;
   });
 
@@ -266,7 +272,9 @@ $(function () {
   $('#shootBtn')
   .bind('mousedown touchstart', function() {
      function shooting() {
-         player.shoot();
+         if (!player.isDead) {
+           player.shoot();
+         }
          shootingId = setTimeout(shooting, 50);
      }
      shooting();

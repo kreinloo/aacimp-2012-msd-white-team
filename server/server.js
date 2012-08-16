@@ -86,8 +86,8 @@ Server.prototype.initialize = function () {
   }));
 /*
   var i, j, random, brick;
-  for (i = 0; i < 33; i += 3 ) {
-    for (j = 0; j < 57; j += 3) {
+  for (i = 0; i < 33; i += 6 ) {
+    for (j = 0; j < 57; j += 6) {
       random = Math.floor(Math.random()*8);
       switch (random) {
         case 0:
